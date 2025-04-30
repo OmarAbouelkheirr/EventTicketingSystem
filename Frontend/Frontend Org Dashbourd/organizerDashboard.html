@@ -8,6 +8,8 @@
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
             <!-- Font Awesome -->
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+            <script src="https://unpkg.com/html5-qrcode"></script>
+
             <style>
                 body {
                     background-color: #f8f9fa;
@@ -55,6 +57,8 @@
                 .dropdown-toggle::after {
                     display: none !important;
                 }
+
+                
             </style>
         </head>
         <body>
@@ -65,16 +69,21 @@
                     <a class="navbar-brand h4 fw-bold d-flex align-items-center mb-4" href="#">
                         <i class="fas fa-tv text-white"></i> <span class="ms-2">EventHub</span>
                     </a>
+                
                     <a href="#" onclick="showSection('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</a>
                     <a href="#" onclick="showSection('tickets')"><i class="fas fa-ticket-alt"></i> Ticket Bookings</a>
                     <a href="#" onclick="toggleDropdown()"><i class="fas fa-calendar"></i> Events <i class="fas fa-chevron-down ms-auto"></i></a>
+                
                     <ul id="eventsDropdown" class="list-unstyled ps-4 d-none">
                         <li><a href="#" onclick="showSection('events')"><i class="fas fa-calendar-alt"></i> My Events</a></li>
                         <li><a href="#" onclick="showSection('addEvent')"><i class="fas fa-calendar-check me-2"></i> Add Event</a></li>
                     </ul>
+                
                     <a href="#" onclick="showSection('profile')"><i class="fas fa-user"></i> Profile</a>
                     <a href="index.html"><i class="fas fa-home"></i> Back to Home</a>
+                    <a href="scan.html"><i class="fas fa-qrcode"></i> Scan QR</a>
                 </div>
+                
 
                 <!-- Main content -->
                 <div class="col-md-10 p-4">
@@ -390,7 +399,6 @@
             }
         }
 
-
             function toggleDropdown() {
                 var dropdown = document.getElementById("eventsDropdown");
                 dropdown.classList.toggle("d-none");
@@ -399,9 +407,11 @@
             function setEventTitle(title) {
                 console.log("Delete requested for event:", title);
             }
+
         </script>
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
         </body>
     </html>
