@@ -47,6 +47,14 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            height: 100%; /* Ensure cards have same height */
+        }
+        .ticket-main {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-grow: 1; /* Allow details to grow */
         }
         .ticket-details h5 {
             font-weight: bold;
@@ -56,6 +64,7 @@
         .ticket-details p {
             margin-bottom: 8px;
             color: #495057;
+            font-size: 0.95em;
         }
         .ticket-details i {
             color: #ec4899; /* Pink accent */
@@ -63,30 +72,60 @@
             width: 16px;
             text-align: center;
         }
+        .ticket-qr img {
+            max-width: 100px;
+            height: auto;
+            border: 1px solid #dee2e6;
+            padding: 3px;
+            border-radius: 5px;
+        }
         .ticket-status {
             font-weight: bold;
             padding: 5px 10px;
             border-radius: 5px;
             font-size: 0.9em;
             text-align: center;
+            display: inline-block;
         }
         .status-active {
-            background-color: rgba(40, 167, 69, 0.1); /* Light green */
-            color: #28a745; /* Green */
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
         }
         .status-scanned {
-            background-color: rgba(255, 193, 7, 0.1); /* Light yellow */
-            color: #ffc107; /* Yellow */
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        .status-expired {
+            background-color: rgba(108, 117, 125, 0.1); /* Light grey */
+            color: #6c757d; /* Grey */
+        }
+        .ticket-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            border-top: 1px dashed #dee2e6;
+            padding-top: 15px;
         }
         .ticket-id {
             font-family: monospace;
             font-size: 1.1em;
             color: #ec4899;
             font-weight: bold;
-            margin-top: 15px;
-            border-top: 1px dashed #dee2e6;
-            padding-top: 15px;
-            text-align: center;
+            text-align: left;
+        }
+        .btn-pink {
+            background-color: #ec4899;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+        }
+        .btn-pink:hover {
+            background-color: #d03682;
+            color: white;
         }
         .footer {
             background-color: #ffffff;
@@ -96,13 +135,13 @@
             text-align: center;
             color: #6c757d;
         }
-        /* Responsive table for smaller screens if needed */
+        /* Responsive table */
         @media (max-width: 768px) {
             .table-responsive {
                 border: none;
             }
             thead {
-                display: none; /* Hide table header on small screens */
+                display: none;
             }
             tr {
                 display: block;
@@ -126,6 +165,16 @@
                 padding-left: 1rem;
                 font-weight: bold;
                 text-align: left;
+            }
+            td[data-label="QR Code"] img {
+                max-width: 60px; /* Smaller QR for table on mobile */
+            }
+            td[data-label="Actions"] {
+                 padding-left: 1rem; /* Adjust padding for action button */
+                 text-align: center;
+            }
+            td[data-label="Actions"]::before {
+                 display: none; /* Hide label for actions */
             }
         }
     </style>
@@ -169,37 +218,74 @@
 
         <!-- Option 1: Ticket Cards -->
         <div class="row">
-            <!-- Sample Ticket Card 1 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="ticket-card">
-                    <div class="ticket-details">
-                        <h5>Tech Conference 2025</h5>
-                        <p><i class="fas fa-calendar-alt"></i> Event Date: October 15, 2025</p>
-                        <p><i class="fas fa-calendar-check"></i> Booked On: April 28, 2025</p>
-                        <p><i class="fas fa-check-circle"></i> Status: <span class="ticket-status status-active">Active</span></p>
+            <!-- Sample Ticket Card 1 (Active) -->
+            <div class="col-md-6 col-lg-4 d-flex">
+                <div class="ticket-card w-100">
+                    <div class="ticket-main">
+                        <div class="ticket-details">
+                            <h5>Tech Conference 2025</h5>
+                            <p><i class="fas fa-calendar-alt"></i> Event Date: October 15, 2025</p>
+                            <p><i class="fas fa-calendar-check"></i> Booked On: April 28, 2025</p>
+                            <p><i class="fas fa-check-circle"></i> Status: <span class="ticket-status status-active">Active</span></p>
+                        </div>
+                        <div class="ticket-qr">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=EVT123456789" alt="QR Code for Ticket EVT123456789">
+                        </div>
                     </div>
-                    <div class="ticket-id">
-                        Ticket #: EVT123456789
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sample Ticket Card 2 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="ticket-card">
-                    <div class="ticket-details">
-                        <h5>Summer Music Festival</h5>
-                        <p><i class="fas fa-calendar-alt"></i> Event Date: July 20, 2025</p>
-                        <p><i class="fas fa-calendar-check"></i> Booked On: April 20, 2025</p>
-                        <p><i class="fas fa-qrcode"></i> Status: <span class="ticket-status status-scanned">Scanned</span></p>
-                    </div>
-                    <div class="ticket-id">
-                        Ticket #: EVT987654321
+                    <div class="ticket-footer">
+                        <div class="ticket-id">
+                            Ticket #: EVT123456789
+                        </div>
+                        <a href="ticket_details.html" class="btn btn-pink btn-sm">View Ticket</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Add more ticket cards as needed -->
+            <!-- Sample Ticket Card 2 (Scanned) -->
+            <div class="col-md-6 col-lg-4 d-flex">
+                <div class="ticket-card w-100">
+                    <div class="ticket-main">
+                        <div class="ticket-details">
+                            <h5>Summer Music Festival</h5>
+                            <p><i class="fas fa-calendar-alt"></i> Event Date: July 20, 2025</p>
+                            <p><i class="fas fa-calendar-check"></i> Booked On: April 20, 2025</p>
+                            <p><i class="fas fa-qrcode"></i> Status: <span class="ticket-status status-scanned">Scanned</span></p>
+                        </div>
+                        <div class="ticket-qr">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=EVT987654321" alt="QR Code for Ticket EVT987654321">
+                        </div>
+                    </div>
+                    <div class="ticket-footer">
+                        <div class="ticket-id">
+                            Ticket #: EVT987654321
+                        </div>
+                        <a href="ticket_details.html" class="btn btn-pink btn-sm">View Ticket</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sample Ticket Card 3 (Expired) -->
+            <div class="col-md-6 col-lg-4 d-flex">
+                <div class="ticket-card w-100">
+                    <div class="ticket-main">
+                        <div class="ticket-details">
+                            <h5>Old Business Seminar</h5>
+                            <p><i class="fas fa-calendar-alt"></i> Event Date: March 10, 2024</p>
+                            <p><i class="fas fa-calendar-check"></i> Booked On: February 15, 2024</p>
+                            <p><i class="fas fa-times-circle"></i> Status: <span class="ticket-status status-expired">Expired</span></p>
+                        </div>
+                        <div class="ticket-qr">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=EVT000111222" alt="QR Code for Ticket EVT000111222">
+                        </div>
+                    </div>
+                    <div class="ticket-footer">
+                        <div class="ticket-id">
+                            Ticket #: EVT000111222
+                        </div>
+                        <a href="ticket_details.html" class="btn btn-secondary btn-sm disabled" aria-disabled="true">View Ticket</a> <!-- Disabled for expired -->
+                    </div>
+                </div>
+            </div>
 
         </div>
 
@@ -216,6 +302,8 @@
                         <th>Booking Date</th>
                         <th>Status</th>
                         <th>Ticket Number</th>
+                        <th>QR Code</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -225,6 +313,8 @@
                         <td data-label="Booking Date">April 28, 2025</td>
                         <td data-label="Status"><span class="ticket-status status-active">Active</span></td>
                         <td data-label="Ticket Number">EVT123456789</td>
+                        <td data-label="QR Code"><img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=EVT123456789" alt="QR Code"></td>
+                        <td data-label="Actions"><a href="ticket_details.html" class="btn btn-pink btn-sm">View</a></td>
                     </tr>
                     <tr>
                         <td data-label="Event Name">Summer Music Festival</td>
@@ -232,6 +322,17 @@
                         <td data-label="Booking Date">April 20, 2025</td>
                         <td data-label="Status"><span class="ticket-status status-scanned">Scanned</span></td>
                         <td data-label="Ticket Number">EVT987654321</td>
+                        <td data-label="QR Code"><img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=EVT987654321" alt="QR Code"></td>
+                        <td data-label="Actions"><a href="ticket_details.html" class="btn btn-pink btn-sm">View</a></td>
+                    </tr>
+                    <tr>
+                        <td data-label="Event Name">Old Business Seminar</td>
+                        <td data-label="Event Date">March 10, 2024</td>
+                        <td data-label="Booking Date">February 15, 2024</td>
+                        <td data-label="Status"><span class="ticket-status status-expired">Expired</span></td>
+                        <td data-label="Ticket Number">EVT000111222</td>
+                        <td data-label="QR Code"><img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=EVT000111222" alt="QR Code"></td>
+                        <td data-label="Actions"><a href="ticket_details.html" class="btn btn-secondary btn-sm disabled" aria-disabled="true">View</a></td> <!-- Disabled for expired -->
                     </tr>
                     <!-- Add more table rows as needed -->
                 </tbody>
