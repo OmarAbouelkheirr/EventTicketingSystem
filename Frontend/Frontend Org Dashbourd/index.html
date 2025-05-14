@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title> EventHub</title>
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+    body {
+    font-family: 'Roboto', sans-serif;
+    }
+
+    /* Navbar */
+    .nav-link {
+    font-size: 1.1rem; 
+    transition: color 0.3s ease;
+    }
+
+    .nav-link:hover {
+    color: #ec4899 !important;
+    }
+
+    .hover-bg-pink:hover {
+    background-color: #ec4899 !important;
+    color: white !important;
+    }
+
+    .main-banner {
+    height: 100vh;
+    object-fit: cover;
+    width: 100%;
+    }
+
+    .overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    }
+
+    .overlay h1 {
+    font-size: 1.5rem;
+    }
+
+    .overlay h2 {
+    font-size: 5rem;
+    color:rgb(132 204 22);
+    }
+
+    .overlay h3 {
+    font-size: 4rem;
+    }
+
+    .overlay p {
+    font-size: 1.25rem;
+    max-width: 700px;
+    }
+
+    .btn-see-more {
+    font-size: 1.1rem;
+    padding: 12px 24px;
+    border-radius: 10px;
+    }
+
+    /* ----------------Events---------------- */
+    .hover-bg-dark-gray:hover {
+    background-color: #4b5563;
+    color: white !important;
+    }
+    .text-pink {
+    color: #e83e8c !important;
+    }
+    .btn-pink {
+    background-color: #e83e8c;
+    color: white;
+    border: 1px solid #e83e8c;
+    transition: 0.3s;
+    }
+    .btn-pink:hover {
+    background-color: white;
+    color: #e83e8c;
+    }
+</style>
+</head>
+<body class="bg-light">
+
+<!-- Header -->
+<header class="bg-white shadow-sm">
+<div class="container py-3 d-flex justify-content-between align-items-center">
+    
+        <nav class="navbar navbar-expand-md bg-white shadow-sm px-3 py-2 w-100">
+            <div class="container-fluid">
+            <!-- Logo -->
+            <a class="navbar-brand h4 fw-bold d-flex align-items-center" href="#">
+                <i class="fas fa-tv me-2 text-danger"></i> EventHub
+            </a>
+        
+            <!-- Toggle Button for Mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        
+            <!-- Collapsible Content -->
+            <div class="collapse navbar-collapse justify-content-between" id="navbarResponsive">
+                <!-- Links (centered) -->
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-2">
+                <li class="nav-item"><a class="nav-link text-danger fw-bold" href="#home-section">Home</a></li>
+                <li class="nav-item"><a class="nav-link text-dark" href="#about-section">About</a></li>
+                <li class="nav-item"><a class="nav-link text-dark" href="#events-section">Events</a></li>
+                <li class="nav-item"><a class="nav-link text-dark" href="#contact-section">Contact</a></li>
+                </ul>
+        
+                <!-- Buttons (right) -->
+                <div class="d-flex gap-2">
+                <button class="btn btn-light border text-danger">Login</button>
+                <button class="btn btn-danger">Sign Up</button>
+                </div>
+            </div>
+            </div>
+        </nav>
+        
+</div>
+</header>
+
+<!-- Main Section -->
+<main class="position-relative" id="home-section">
+<img src="img/p_banner.jpg" alt="Wedding event with lights and decorations" class="main-banner">
+
+<div class="overlay d-flex flex-column justify-content-center px-4 px-md-5">
+    <div class="container text-start">
+    <h1 class="text-white fw-bold">Dream Craft Events</h1>
+    <h3 class="text-white fw-bold mt-2">Our Events</h3>
+    <h2 class=" fw-bold mt-2">Book Now!</h2>
+    <p class="text-white mt-3">
+        From elegant soirées to lively gatherings, we curate diverse events for every occasion,
+        guaranteeing a memorable experience for all guests.
+    </p>
+    <button class="btn btn-see-more text-white mt-4" style="background-color: #ec4899;">See More</button>
+    </div>
+</div>
+</main>
+
+<!-- Why Choose EventHub? -->
+    <section class="py-5 bg-light">
+        <div class="container text-center">
+            <h2 class="mb-4 fw-bold">Why Choose EventHub?</h2>
+            <div class="row gy-4">
+                    <div class="col-md-3">
+                        <i class="fas fa-bolt fa-2x mb-3 text-pink"></i>
+                        <h5>Quick Booking</h5>
+                        <p class="text-muted">Book your events in just a few clicks!</p>
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fas fa-headset fa-2x mb-3 text-pink"></i>
+                        <h5>24/7 Support</h5>
+                        <p class="text-muted">We are always here to help you.</p>
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fas fa-cogs fa-2x mb-3 text-pink"></i>
+                        <h5>Easy Management</h5>
+                        <p class="text-muted">Manage and monitor your events easily.</p>
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fas fa-lock fa-2x mb-3 text-pink"></i>
+                        <h5>Secure System</h5>
+                        <p class="text-muted">Your data and payments are safe.</p>
+                    </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 text-black text-center" style="background-color: rgba(252, 252, 252, 0.997);">
+        <div class="container">
+            <h2 class="fw-bold mb-3">Ready to host your next event?</h2>
+            <p class="mb-4">Let us help you make it unforgettable.</p>
+            <a href="organizerDashboard.html" class="btn btn-danger px-4 py-2">Get Started</a>
+        </div>
+    </section>
+
+	<!-- about start -->
+    <section class="about py-5" id="about-section" style="background-color: #fdf2f8;">
+        <div class="container">
+            <!-- <h2 class="text-center fw-bold mb-5" style="color: #d21272;">
+                <span style="color: #ec4899;">About</span> Us
+            </h2> -->
+            <h2 class="text-center fw-bold mb-5 bg-white" style="padding: 7px;">About <span class="text-pink" >Us</span> </h2>
+        
+            <div class="row align-items-center">
+                <!-- Image -->
+                <div class="col-md-6 mb-4 mb-md-0 text-center">
+                    <img src="img/about.png" alt="About Image" class="img-fluid rounded shadow" style="max-height: 350px;">
+                </div>
+        
+                <!-- Content -->
+                <div class="col-md-6">
+                    <h3 class="fw-semibold mb-3" style="color: #d21272;">About EventHub</h3>
+                    <p class="text-muted">
+                        EventHub is your all-in-one platform for creating, managing, and hosting events with ease. 
+                        Whether it's a concert, workshop, or conference – we provide tools that simplify the process from start to finish.
+                    </p>
+                    <p class="text-muted">
+                        Our goal is to empower organizers and engage attendees by offering a smooth, modern experience.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+<!-- Events Section -->
+<div class="container py-4" id="events-section">
+    <h1 class="text-center fw-bold mb-5">ALL <span class="text-pink">EVENTS</span> </h1>
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 mb-4">
+        <div class="mb-4 position-relative">
+            <input type="text" class="form-control ps-4 rounded-pill" placeholder="Search by name"/>
+            <button class="btn btn-danger position-absolute top-0 end-0 mt-1 me-1 rounded-circle">
+            <i class="fas fa-search"></i>
+            </button>
+        </div>
+
+        <div class="bg-white p-3 rounded shadow">
+            <h2 class="h5 fw-bold mb-3 d-flex align-items-center bg-danger text-white p-2 rounded">
+            <i class="fas fa-th-large me-2 "></i> Category
+            </h2>
+            <ul class="list-unstyled">
+            <li class="mb-2">
+                <a href="#" class="text-decoration-none text-dark p-2 d-block rounded hover-bg-dark-gray">All</a>
+            </li>
+            <li class="mb-2">
+                <a href="#" class="text-decoration-none text-dark p-2 d-block rounded hover-bg-dark-gray">Technology</a>
+            </li>
+            <li class="mb-2">
+                <a href="#" class="text-decoration-none text-dark p-2 d-block rounded hover-bg-dark-gray">Health</a>
+            </li>
+            <li class="mb-2">
+                <a href="#" class="text-decoration-none text-dark p-2 d-block rounded hover-bg-dark-gray">Business</a>
+            </li>
+            <li class="mb-2">
+                <a href="#" class="text-decoration-none text-dark p-2 d-block rounded hover-bg-dark-gray">Others</a>
+            </li>
+            </ul>
+        </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+        <div class="row g-4">
+            <!-- Event Card -->
+            <div class="col-sm-6">
+            <div class="card shadow">
+                <img src="img/event.png" class="card-img-top" alt="Tech Expo 2024">
+                <div class="card-body">
+                <div class="text-muted mb-2">
+                    <i class="fas fa-calendar-alt me-2 text-pink"></i> March 31, 2024
+                    <i class="fas fa-map-marker-alt ms-3 me-2 text-pink"></i> Tech Convention Center
+                </div>
+                <h5 class="card-title fw-bold">Tech Expo 2024</h5>
+                <a href="#" class="btn btn-pink mt-2">Event Details</a>
+                </div>
+            </div>
+            </div>
+
+            <!-- Event Card -->
+            <div class="col-sm-6">
+            <div class="card shadow">
+                <img src="img/event2.png" class="card-img-top" alt="Art and Culture Festival">
+                <div class="card-body">
+                <div class="text-muted mb-2">
+                    <i class="fas fa-calendar-alt me-2 text-pink"></i> June 3, 2024
+                    <i class="fas fa-map-marker-alt ms-3 me-2 text-pink"></i> City Arts Center
+                </div>
+                <h5 class="card-title fw-bold">Art and Culture Festival</h5>
+                <a href="#" class="btn btn-pink mt-2">Event Details</a>
+                </div>
+            </div>
+            </div>
+
+            <!-- Event Card -->
+            <div class="col-sm-6">
+            <div class="card shadow">
+                <img src="img/event3.png" class="card-img-top" alt="Fitness Challenge Day">
+                <div class="card-body">
+                <div class="text-muted mb-2">
+                    <i class="fas fa-calendar-alt me-2 text-pink"></i> March 7, 2024
+                    <i class="fas fa-map-marker-alt ms-3 me-2 text-pink"></i> Fitness Park
+                </div>
+                <h5 class="card-title fw-bold">Fitness Challenge Day</h5>
+                <a href="#" class="btn btn-pink mt-2">Event Details</a>
+                </div>
+            </div>
+            </div>
+
+            <!-- Event Card -->
+            <div class="col-sm-6">
+            <div class="card shadow">
+                <img src="img/event4.png" class="card-img-top" alt="Music Fest Extravaganza">
+                <div class="card-body">
+                <div class="text-muted mb-2">
+                    <i class="fas fa-calendar-alt me-2 text-pink"></i> April 12, 2024
+                    <i class="fas fa-map-marker-alt ms-3 me-2 text-pink"></i> City Amphitheater
+                </div>
+                <h5 class="card-title fw-bold">Music Fest Extravaganza</h5>
+                <a href="#" class="btn btn-pink mt-2">Event Details</a>
+                </div>
+            </div>
+            </div>
+
+                <!-- Event Card -->
+                <div class="col-sm-6">
+                    <div class="card shadow">
+                        <img src="img/event5.png" class="card-img-top" alt="Tech Expo 2024">
+                        <div class="card-body">
+                        <div class="text-muted mb-2">
+                            <i class="fas fa-calendar-alt me-2 text-pink"></i> March 31, 2024
+                            <i class="fas fa-map-marker-alt ms-3 me-2 text-pink"></i> Tech Convention Center
+                        </div>
+                        <h5 class="card-title fw-bold">Tech Expo 2024</h5>
+                        <a href="#" class="btn btn-pink mt-2">Event Details</a>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- footer section  -->
+    <footer class="py-5 bg-white">
+        <div class="container">
+        
+        <!-- Top Footer Content -->
+        <div class="row gy-4 justify-content-between">
+            <!-- Logo and Description -->
+            <div class="col-md-5">
+            <div class="h4 fw-bold mb-3">
+                <i class="fas fa-tv" style="color: #d21272;"></i> EventHub
+            </div>
+            <p class="text-muted mb-3">
+                At Dream Craft Events, we specialize in turning your events into extraordinary experiences. Our Event Management System is crafted to simplify every aspect of planning, booking, and execution.
+            </p>
+            <div class="d-flex gap-3 mt-3">
+                <a href="#" style="color: #ec4899;"><i class="fab fa-facebook fa-lg"></i></a>
+                <a href="#" style="color: #ec4899;"><i class="fab fa-instagram fa-lg"></i></a>
+                <a href="#" style="color: #ec4899;"><i class="fab fa-twitter fa-lg"></i></a>
+                <a href="#" style="color: #ec4899;"><i class="fab fa-github fa-lg"></i></a>
+                <a href="#" style="color: #ec4899;"><i class="fab fa-dribbble fa-lg"></i></a>
+            </div>
+            </div>
+    
+            <!-- Contact Info -->
+            <div class="col-md-5" id="contact-section">
+            <h5 class="fw-semibold mb-3">Contact Us</h5>
+            <ul class="list-unstyled">
+                <li class="d-flex align-items-center mb-3">
+                <i class="fas fa-envelope me-2" style="color: #ec4899;"></i>
+                <span class="text-muted">info@eventhub.com</span>
+                </li>
+                <li class="d-flex align-items-center mb-3">
+                <i class="fas fa-phone me-2" style="color: #ec4899;"></i>
+                <span class="text-muted">+8801916498482</span>
+                </li>
+                <li class="d-flex align-items-center mb-3">
+                <i class="fas fa-map-marker-alt me-2" style="color: #ec4899;"></i>
+                <span class="text-muted">1213 Dhaka, Bangladesh</span>
+                </li>
+            </ul>
+            </div>
+        </div>
+    
+        <!-- Footer Bottom -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center border-top pt-4 mt-5 gap-3">
+            <p class="text-muted mb-0 small" style="font-size: 16px;">© 2025 EventHub</p>
+            <p class="text-muted mb-0 small" style="font-size: 16px;">All rights reserved.</p>
+            <img src="img/logo.png" alt="Chatbot icon" class="img-fluid" style="width:80px;">
+        </div>
+        
+        </div>
+    </footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

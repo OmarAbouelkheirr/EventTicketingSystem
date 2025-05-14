@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Dashboard</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <style>
+            body {
+                background-color: #f8f9fa;
+            }
+            .sidebar {
+                height: 100vh;
+                background: linear-gradient(to bottom right, #0c1427, #0c1427);
+                color: white;
+            }
+            .sidebar a {
+                color: white;
+                text-decoration: none;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+            }
+            .sidebar a i {
+                margin-right: 10px;
+            }
+            .sidebar a:hover {
+                text-decoration: none;
+            }
+            .stat-card {
+                border: none;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            }
+            .stat-icon {
+                width: 40px;
+                height: 40px;
+                background-color: #ec4899;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+            }
+            .btn-pink {
+                background-color: #ec4899;
+                color: white;
+            }
+            .btn-pink:hover {
+                background-color: #d03682;
+            }
+            .dropdown-toggle::after {
+                display: none !important;
+            }
+            .status-pending {
+                color: #ffc107;
+                font-weight: bold;
+            }
+            .status-published {
+                color: #28a745;
+                font-weight: bold;
+            }
+            .status-rejected {
+                color: #dc3545;
+                font-weight: bold;
+            }
+            .user-type-organizer {
+                color: #ec4899;
+                font-weight: bold;
+            }
+            .user-type-regular {
+                color: #17a2b8;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar d-flex flex-column p-3">
+                <a class="navbar-brand h4 fw-bold d-flex align-items-center mb-4" href="#">
+                    <i class="fas fa-tv text-white"></i> <span class="ms-2">EventHub Admin</span>
+                </a>
+                <a href="#" onclick="showSection('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="#" onclick="toggleDropdown('usersDropdown')"><i class="fas fa-users"></i> User Management <i class="fas fa-chevron-down ms-auto"></i></a>
+                <ul id="usersDropdown" class="list-unstyled ps-4 d-none">
+                    <li><a href="#" onclick="showSection('allUsers')"><i class="fas fa-list"></i> All Users</a></li>
+                </ul>
+                <a href="#" onclick="toggleDropdown('categoriesDropdown')"><i class="fas fa-tags"></i> Categories <i class="fas fa-chevron-down ms-auto"></i></a>
+                <ul id="categoriesDropdown" class="list-unstyled ps-4 d-none">
+                    <li><a href="#" onclick="showSection('viewCategories')"><i class="fas fa-list"></i> View Categories</a></li>
+                    <li><a href="#" onclick="showSection('addCategory')"><i class="fas fa-plus-circle"></i> Add Category</a></li>
+                </ul>
+                <a href="#" onclick="toggleDropdown('eventsDropdown')"><i class="fas fa-calendar"></i> Events <i class="fas fa-chevron-down ms-auto"></i></a>
+                <ul id="eventsDropdown" class="list-unstyled ps-4 d-none">
+                    <li><a href="#" onclick="showSection('allEvents')"><i class="fas fa-list"></i> All Events</a></li>
+                    <li><a href="#" onclick="showSection('pendingEvents')"><i class="fas fa-clock"></i> Pending Review</a></li>
+                    <li><a href="#" onclick="showSection('addEvent')"><i class="fas fa-calendar-check me-2"></i> Add Event</a></li>
+                </ul>
+                <a href="#" onclick="toggleDropdown('ticketsDropdown')"><i class="fas fa-ticket-alt"></i> Tickets <i class="fas fa-chevron-down ms-auto"></i></a>
+                <ul id="ticketsDropdown" class="list-unstyled ps-4 d-none">
+                    <li><a href="#" onclick="showSection('allTickets')"><i class="fas fa-list"></i> All Tickets</a></li>
+                </ul>
+                <a href="index.html"><i class="fas fa-home"></i> Back to Home</a>
+            </div>
+
+            <!-- Main content -->
+            <div class="col-md-10 p-4">
+                <!-- Profile Dropdown -->
+                <div class="d-flex justify-content-end align-items-center mb-3">
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="img/imgProfile.png" alt="Profile" class="rounded-circle" width="40" height="40">
+                            <span class="ms-2">Admin</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="login.html"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Admin Dashboard</h3>
+
+                <!-- Dashboard Stats -->
+                <div id="dashboard-section" class="mt-4">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <div class="card stat-card p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5>Total Users</h5>
+                                        <h3>1,245</h3>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5>Organizers</h5>
+                                        <h3>87</h3>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-user-tie"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5>Events</h5>
+                                        <h3>342</h3>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5>Tickets Sold</h5>
+                                        <h3>5,678</h3>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-ticket-alt"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Activity Section -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5>Recent Activity</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group">
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">New event created</h6>
+                                        <small>5 minutes ago</small>
+                                    </div>
+                                    <p class="mb-1">"Summer Music Festival" by Music Events Co.</p>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">New user registered</h6>
+                                        <small>23 minutes ago</small>
+                                    </div>
+                                    <p class="mb-1">fedaa AbdelazIz(Organizer)</p>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">Ticket purchase</h6>
+                                        <small>1 hour ago</small>
+                                    </div>
+                                    <p class="mb-1">Sarah ali bought ticket for "Tech Conference 2023"</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All Users Section -->
+                <div id="allUsers-section" class="mt-5" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4>User Management</h4>
+                        <div class="input-group" style="width: 300px;">
+                            <input type="text" class="form-control" placeholder="Search users...">
+                            <button class="btn btn-pink" type="button"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead style="color: white; background-color:rgb(99, 98, 98);">
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>User Type</th>
+                                <th>Email</th>
+                                <th>Registration Date</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>fedaa AbdelazIz</td>
+                                <td><span class="user-type-organizer">Organizer</span></td>
+                                <td>fedAa@example.com</td>
+                                <td>2023-01-15</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteUserModal" onclick="setDeleteUserId(1)">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>layan Ali</td>
+                                <td><span class="user-type-regular">Regular</span></td>
+                                <td>lily@example.com</td>
+                                <td>2023-02-20</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteUserModal" onclick="setDeleteUserId(2)">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Sarah ali</td>
+                                <td><span class="user-type-regular">Regular</span></td>
+                                <td>sarah@example.com</td>
+                                <td>2023-03-05</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteUserModal" onclick="setDeleteUserId(3)">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <!-- View Categories Section -->
+                <div id="viewCategories-section" class="mt-5" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4>Categories</h4>
+                        <div>
+                            <a href="#" onclick="showSection('addCategory')" class="btn btn-pink">+ Add Category</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead style="color: white; background-color:rgb(99, 98, 98);">
+                            <tr>
+                                <th>#</th>
+                                <th>Category Name</th>
+                                <th>Number of Events</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Music Concerts</td>
+                                <td>124</td>
+                                <td>
+                                    <a href="c:\Users\DELL\OneDrive\سطح المكتب\TASK\viewcat3.html" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> View</a>
+                                    <button class="btn btn-secondary btn-sm"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal" onclick="setDeleteCategoryId(1)">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Tech Conferences</td>
+                                <td>87</td>
+                                <td>
+                                    <a href="c:\Users\DELL\OneDrive\سطح المكتب\TASK\viewcategory.html" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> View</a>
+                                    <button class="btn btn-secondary btn-sm"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal" onclick="setDeleteCategoryId(2)">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Sports Events</td>
+                                <td>65</td>
+                                <td>
+                                    <a href="c:\Users\DELL\OneDrive\سطح المكتب\TASK\viewcategory2.html" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> View</a>
+                                    <button class="btn btn-secondary btn-sm"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal" onclick="setDeleteCategoryId(3)">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Add Category Section -->
+                <div id="addCategory-section" style="display: none;">
+                    <div class="form-container bg-white p-4 rounded shadow">
+                        <h2 class="text-center text-danger mb-4">Add New Category</h2>
+                        <form id="categoryForm">
+                            <div class="mb-3">
+                                <label class="form-label">Category Name</label>
+                                <input type="text" class="form-control" id="categoryName" placeholder="Enter category name" required>
+                                <div class="invalid-feedback" id="categoryNameFeedback">
+                                    Category name already exists!
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-pink px-4">ADD CATEGORY</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- All Events Section -->
+                <div id="allEvents-section" class="mt-5" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4>All Events</h4>
+                        <a href="#" onclick="showSection('addEvent')" class="btn btn-pink">+ Add Event</a>
+                        <div class="input-group" style="width: 300px;">
+                            <input type="text" class="form-control" placeholder="Search events...">
+                            <button class="btn btn-pink" type="button"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead style="color: white; background-color:rgb(99, 98, 98);">
+                            <tr>
+                                <th>#</th>
+                                <th>Event Name</th>
+                                <th>Organizer</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Summer Music Festival</td>
+                                <td>Music Events Co.</td>
+                                <td>Music Concerts</td>
+                                <td>2023-07-15</td>
+                                <td><span class="status-published">Published</span></td>
+                                <td>
+                                    <a href="viewEvent.html" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> View</a>
+                                    <button class="btn btn-secondary btn-sm"><i class="fas fa-edit"></i> Edit</button>
+                                    
+                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteEventModal" onclick="setDeleteEventId(1)">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Tech Conference 2023</td>
+                                <td>Tech Events Ltd</td>
+                                <td>Tech Conferences</td>
+                                <td>2023-08-20</td>
+                                <td><span class="status-published">Published</span></td>
+                                <td>
+                                    <a href="c:\Users\DELL\OneDrive\سطح المكتب\TASK\viewevent2.html" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> View</a>
+                                    <button class="btn btn-secondary btn-sm"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteEventModal" onclick="setDeleteEventId(2)">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pending Events Section -->
+                <div id="pendingEvents-section" class="mt-5" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4>Events Pending Review</h4>
+                        <div class="input-group" style="width: 300px;">
+                            <input type="text" class="form-control" placeholder="Search events...">
+                            <button class="btn btn-pink" type="button"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead style="color: white; background-color:rgb(99, 98, 98);">
+                            <tr>
+                                <th>#</th>
+                                <th>Event Name</th>
+                                <th>Organizer</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Jazz Night</td>
+                                <td>Jazz Club</td>
+                                <td>Music Concerts</td>
+                                <td>2023-09-10</td>
+                                <td><span class="status-pending">Pending</span></td>
+                                <td>
+                                    <a href="viewEvent.html" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> View</a>
+                                    <button class="btn btn-success btn-sm" onclick="updateEventStatus(1, 'published')"><i class="fas fa-check"></i> Approve</button>
+                                    <button class="btn btn-danger btn-sm" onclick="updateEventStatus(1, 'rejected')"><i class="fas fa-times"></i> Reject</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Startup Pitch</td>
+                                <td>Entrepreneurs Network</td>
+                                <td>Business</td>
+                                <td>2023-10-05</td>
+                                <td><span class="status-pending">Pending</span></td>
+                                <td>
+                                    <a href="viewEvent.html" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> View</a>
+                                    <button class="btn btn-success btn-sm" onclick="updateEventStatus(2, 'published')"><i class="fas fa-check"></i> Approve</button>
+                                    <button class="btn btn-danger btn-sm" onclick="updateEventStatus(2, 'rejected')"><i class="fas fa-times"></i> Reject</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                    <!-- Add Event Section -->
+                    <div id="addEvent-section" style="display: none;">
+                        <div class="form-container bg-white p-4 rounded shadow">
+                            <h2 class="text-center text-danger mb-4">Add Event</h2>
+                            <form>
+                                <div class="mb-3">
+                                    <label class="form-label">Event Name</label>
+                                    <input type="text" class="form-control" placeholder="Event Title" />
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Event Seats</label>
+                                        <input type="text" class="form-control" placeholder="Event Seats" />
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Event Type</label>
+                                        <select class="form-select" id="eventType" name="eventType" required>
+                                            <option value="" disabled selected>Select Event Type</option>
+                                            <!-- options from database-->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Event Location</label>
+                                        <input type="text" class="form-control" placeholder="Location" />
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Event Date</label>
+                                        <input type="text" class="form-control" placeholder="mm/dd/yyyy" />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Event Details</label>
+                                    <textarea class="form-control" placeholder="Description" rows="3"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Upload Image</label>
+                                    <input type="file" class="form-control" />
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-pink px-4">CREATE NEW EVENT</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                <!-- All Tickets Section -->
+                <div id="allTickets-section" class="mt-5" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4>All Ticket Bookings</h4>
+                        <div class="input-group" style="width: 300px;">
+                            <input type="text" class="form-control" placeholder="Search tickets...">
+                            <button class="btn btn-pink" type="button"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead style="color: white; background-color:rgb(99, 98, 98);">
+                            <tr>
+                                <th>#</th>
+                                <th>Attendee Name</th>
+                                <th>Email</th>
+                                <th>Ticket ID</th>
+                                <th>Event Name</th>
+                                <th>Booking Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>fedaa AbdelazIz</td>
+                                <td>fedAa@example.com</td>
+                                <td>TK-001</td>
+                                <td>Summer Music Festival</td>
+                                <td>2023-06-20</td>
+                                <td>Confirmed</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteTicketModal" onclick="setDeleteTicketId(1)">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>layan ali</td>
+                                <td>lily@example.com</td>
+                                <td>TK-002</td>
+                                <td>Tech Conference 2023</td>
+                                <td>2023-07-15</td>
+                                <td>Confirmed</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteTicketModal" onclick="setDeleteTicketId(2)">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete User Modal -->
+    <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteUserModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this user? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteUser()">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Category Modal -->
+    <div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteCategoryModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this category? Events associated with this category will not be deleted but will need to be reassigned.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteCategory()">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Event Modal -->
+    <div class="modal fade" id="deleteEventModal" tabindex="-1" aria-labelledby="deleteEventModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteEventModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this event? All associated tickets will also be deleted.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteEvent()">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Ticket Modal -->
+    <div class="modal fade" id="deleteTicketModal" tabindex="-1" aria-labelledby="deleteTicketModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteTicketModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this ticket booking? The user will be notified of this cancellation.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteTicket()">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Global variables to store IDs for deletion
+        let currentDeleteUserId = null;
+        let currentDeleteCategoryId = null;
+        let currentDeleteEventId = null;
+        let currentDeleteTicketId = null;
+        
+        // Show/hide sections
+        function showSection(section) {
+            // Hide all sections first
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('allUsers-section').style.display = 'none';
+            document.getElementById('viewCategories-section').style.display = 'none';
+            document.getElementById('addCategory-section').style.display = 'none';
+            document.getElementById('allEvents-section').style.display = 'none';
+            document.getElementById('pendingEvents-section').style.display = 'none';
+            document.getElementById('allTickets-section').style.display = 'none';
+            
+            // Show the requested section only
+            if (section === 'dashboard') {
+                document.getElementById('dashboard-section').style.display = 'block';
+            } else if (section === 'allUsers') {
+                document.getElementById('allUsers-section').style.display = 'block';
+            } else if (section === 'viewCategories') {
+                document.getElementById('viewCategories-section').style.display = 'block';
+            } else if (section === 'addCategory') {
+                document.getElementById('addCategory-section').style.display = 'block';
+            } else if (section === 'allEvents') {
+                document.getElementById('allEvents-section').style.display = 'block';
+            } else if (section === 'pendingEvents') {
+                document.getElementById('pendingEvents-section').style.display = 'block';
+            } else if (section === 'allTickets') {
+                document.getElementById('allTickets-section').style.display = 'block';
+            }
+        }
+
+        // Toggle dropdown menus
+        function toggleDropdown(dropdownId) {
+            var dropdown = document.getElementById(dropdownId);
+            dropdown.classList.toggle("d-none");
+        }
+
+        // Set IDs for deletion
+        function setDeleteUserId(id) {
+            currentDeleteUserId = id;
+        }
+        
+        function setDeleteCategoryId(id) {
+            currentDeleteCategoryId = id;
+        }
+        
+        function setDeleteEventId(id) {
+            currentDeleteEventId = id;
+        }
+        
+        function setDeleteTicketId(id) {
+            currentDeleteTicketId = id;
+        }
+        
+        // Delete functions
+        function deleteUser() {
+            console.log("Deleting user with ID:", currentDeleteUserId);
+            // Here you would typically make an AJAX call to your backend
+            $('#deleteUserModal').modal('hide');
+            // Show success message
+            alert("User deleted successfully!");
+            // In a real app, you would refresh the user list
+        }
+        
+        function deleteCategory() {
+            console.log("Deleting category with ID:", currentDeleteCategoryId);
+            // Here you would typically make an AJAX call to your backend
+            $('#deleteCategoryModal').modal('hide');
+            // Show success message
+            alert("Category deleted successfully!");
+            // In a real app, you would refresh the category list
+        }
+        
+        function deleteEvent() {
+            console.log("Deleting event with ID:", currentDeleteEventId);
+            // Here you would typically make an AJAX call to your backend
+            $('#deleteEventModal').modal('hide');
+            // Show success message
+            alert("Event deleted successfully!");
+            // In a real app, you would refresh the event list
+        }
+        
+        function deleteTicket() {
+            console.log("Deleting ticket with ID:", currentDeleteTicketId);
+            // Here you would typically make an AJAX call to your backend
+            $('#deleteTicketModal').modal('hide');
+            // Show success message
+            alert("Ticket deleted successfully!");
+            // In a real app, you would refresh the ticket list
+        }
+        
+        // Update event status (approve/reject)
+        function updateEventStatus(eventId, status) {
+            console.log("Updating event", eventId, "to status:", status);
+            // Here you would typically make an AJAX call to your backend
+            // Show success message
+            alert(`Event status updated to ${status}`);
+            // In a real app, you would refresh the event list
+        }
+        
+        // Form validation for adding categories
+        document.getElementById('categoryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const categoryName = document.getElementById('categoryName').value;
+            
+            // In a real app, you would check if the category exists via AJAX
+            // For demo purposes, we'll just check if it's "Music Concerts"
+            if (categoryName.toLowerCase() === "music concerts") {
+                document.getElementById('categoryName').classList.add('is-invalid');
+                document.getElementById('categoryNameFeedback').style.display = 'block';
+            } else {
+                // Submit the form (in a real app, this would be an AJAX call)
+                alert(`Category "${categoryName}" added successfully!`);
+                document.getElementById('categoryForm').reset();
+                showSection('viewCategories');
+            }
+        });
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
