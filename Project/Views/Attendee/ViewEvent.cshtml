@@ -1,0 +1,219 @@
+﻿@using EventBookingSystem.Models
+@model Event
+@{
+    Layout = "_Layout.cshtml";
+}
+
+<html lang="en">
+
+<head>
+
+    <title>@Model.EventName</title>
+</head>
+
+<body>
+
+
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Embedded CSS -->
+    <style>
+        /* Global Styles */
+        body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f2f4f8;
+        }
+
+        /* Hero Section */
+        .hero {
+        background-image: url('/event-images/@Model.Image'); /* Background Image */
+        background-size: cover;
+        background-position: center;
+        color: white;
+        text-align: center;
+        padding: 100px 20px;
+        height: 400px;
+        }
+
+        .hero h1 {
+        font-size: 3.5em;
+        margin: 0;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+        font-size: 1.5em;
+        margin: 10px 0;
+        font-weight: lighter;
+        }
+
+        /* Main Container */
+        .container {
+        max-width: 1000px;
+        margin: -80px auto 50px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        text-align: center;
+        }
+
+        /* Event Details */
+        .event-details {
+        font-size: 1.2em;
+        color: #333;
+        margin-bottom: 20px;
+        }
+
+        .event-details strong {
+        font-weight: bold;
+        color: #2c3e50;
+        }
+
+        /* Price Styles */
+        .price {
+        font-size: 2em;
+        font-weight: bold;
+        color: #e74c3c;
+        margin-top: 10px;
+        }
+
+        .book-btn {
+        background-color: #ec4899; /* Pink */
+        color: white;
+        padding: 12px 24px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .book-btn:hover {
+        background-color: #db2777;
+        transform: scale(1.05);
+        }
+
+        .book-btn:active {
+        transform: scale(0.97);
+        }
+
+        .book-btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.4);
+        }
+
+
+        /* Responsive Styles */
+        @@media (max-width: 768px) {
+        .hero h1 {
+        font-size: 2.5em;
+        }
+
+        .hero p {
+        font-size: 1.2em;
+        }
+
+        .container {
+        margin: 20px;
+        padding: 30px;
+        }
+        }
+
+        #eventAlert {
+        background-color: #fff3cd; /* Soft yellow */
+        color: #856404;
+        border: 1px solid #ffeeba;
+        padding: 10px 15px;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        font-size: 28px;
+        }
+    </style>
+
+
+
+    <!-- Hero Section with Event Title -->
+    <div class="hero" style="background-image=">
+        <h1>@Model.EventName</h1>
+        <p>@Model.EventDate.ToString("MMMM dd, yyyy")</p>
+    </div>
+
+    <!-- Event Details Section -->
+    <div class="container">
+        <div class="event-details">
+            <p><strong>Description:</strong> @Model.Description</p>
+            <p><strong>Date:</strong> @Model.EventDate.ToString("MMMM dd, yyyy")</p>
+            <p><strong>Location:</strong> @Model.Location</p>
+        </div>
+
+        @if (DateTime.Now > Model.EventDate)
+        {
+            <div id="eventAlert">⚠️ This event has ended.</div>
+        }
+        else
+        {
+            <!-- Buy Ticket Button -->
+            <button id="book-ticket-btn" class="book-btn">🎟️ Book Ticket</button>
+        }
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const bookBtn = document.getElementById("book-ticket-btn");
+
+            bookBtn.addEventListener("click", async function () {
+                const eventId = '@Model.EventID';
+
+                try {
+                    const response = await fetch('/api/Attendee/tickets', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ eventID: parseInt(eventId) })
+                    });
+
+                    if (!response.ok) {
+                        const error = await response.text();
+                        throw new Error(error);
+                    }
+
+                    const ticket = await response.json();
+
+                    // SweetAlert for success
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Ticket booked successfully!',
+                        html: `<strong>Ticket Code:</strong> ${ticket.ticketCode}`,
+                        confirmButtonText: 'OK'
+                    });
+
+                } catch (err) {
+                    // SweetAlert for error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Booking failed',
+                        text: err.message,
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+
+
+    </script>
+
+</body></html>

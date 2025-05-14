@@ -1,0 +1,837 @@
+@using EventBookingSystem.DTOs
+@using EventBookingSystem.Models
+@model EventCreateDTO
+
+@{
+    OrganizerProfileDTO? profile = ViewBag.Profile as OrganizerProfileDTO;
+    var categories = (ViewBag.Categories as List<SelectListItem>);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizer Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+        background-color: #f8f9fa;
+        }
+        .sidebar {
+        height: 100vh;
+        background: linear-gradient(to bottom right, #0c1427, #0c1427);
+        color: white;
+        }
+        .sidebar a {
+        color: white;
+        text-decoration: none;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        }
+        .sidebar a i {
+        margin-right: 10px;
+        }
+        .sidebar a:hover {
+        text-decoration: none;
+        }
+        .stat-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .stat-icon {
+        width: 40px;
+        height: 40px;
+        background-color: #ec4899;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        }
+        .btn-pink {
+        background-color: #ec4899;
+        color: white;
+        }
+        .btn-pink:hover {
+        background-color: #d03682;
+        }
+        .dropdown-toggle::after {
+        display: none !important;
+        }
+
+
+
+        .drop-zone {
+            width: 300px; /* Fixed width */
+            height: 300px; /* Same height = square, avoids distortion */
+            border: 2px dashed #ccc;
+            background-size: contain; /* or "cover" for full coverage, might crop */
+            background-repeat: no-repeat;
+            background-position: center;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-left:auto;
+            margin-right:auto;
+            border-radius: 50%;
+        }
+
+            .drop-zone:hover {
+                border-color: #888;
+                background-color: #f5f5f5;
+            }
+
+        .profile-circle {
+            width: 50px; /* Adjust size as needed */
+            height: 50px;
+            border-radius: 50%; /* Makes it a perfect circle */
+            background-size: cover; /* Ensures the image covers the whole circle */
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 2px solid #ccc; /* Optional: adds a border around the circle */
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar d-flex flex-column p-3">
+                <a class="navbar-brand h4 fw-bold d-flex align-items-center mb-4" href="#">
+                    <i class="fas fa-tv text-white"></i> <span class="ms-2">EventHub</span>
+                </a>
+                <a href="#" onclick="showSection('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="#" onclick="showSection('tickets')"><i class="fas fa-ticket-alt"></i> Ticket Bookings</a>
+                <a href="#" onclick="toggleDropdown()"><i class="fas fa-calendar"></i> Events <i class="fas fa-chevron-down ms-auto"></i></a>
+                <ul id="eventsDropdown" class="list-unstyled ps-4 d-none">
+                    <li><a href="#" onclick="showSection('events')"><i class="fas fa-calendar-alt"></i> My Events</a></li>
+                    <li><a href="#" onclick="showSection('addEvent')"><i class="fas fa-calendar-check me-2"></i> Add Event</a></li>
+                </ul>
+                <a href="#" onclick="showSection('profile')"><i class="fas fa-user"></i> Profile</a>
+                <a asp-controller="Account" asp-action="HomePage"><i class="fas fa-home"></i> Back to Home</a>
+            </div>
+            <!-- Main content -->
+            <div class="col-md-10 p-4">
+                <!-- Profile Dropdown -->
+                <a asp-action="Scan" class="btn btn-pink me-2">
+                    <i class="bi bi-qr-code-scan"></i> Scan Ticket
+                </a>
+                <div class="d-flex justify-content-end align-items-center mb-3">
+
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="profile-circle"></div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="#" onclick="showSection('profile')" ><i class="fas fa-user me-2"></i> Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Welcome back, Organizer</h3>
+
+                <!-- Dashboard Stats -->
+                <div id="dashboard-section" class="mt-4">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="card stat-card p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5>My Events</h5>
+                                        <h3 id="My_Events_Count">loading</h3>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card stat-card p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5>Total Tickets</h5>
+                                        <h3 id="Total_Tickets_Count">loading</h3>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-ticket-alt"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card stat-card p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5>Attendees</h5>
+                                        <h3 id="Attendees_Count">loading</h3>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Events Section -->
+                <div id="events-section" class="mt-5" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4>My Events</h4>
+                        <a href="#" onclick="showSection('addEvent')" class="btn btn-pink">+ Add Event</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead style="color: white; background-color:rgb(99, 98, 98);">
+                                <tr style=" text-align: center;">
+                                    <th>#</th>
+                                    <th>Event Title</th>
+                                    <th>Date</th>
+                                    <th>Location</th>My Event
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="Events_Table">
+                                <tr style="font-size: 18px; text-align: center;">
+                                    <td>1</td>
+                                    <td>Summer Gala 2025</td>
+                                    <td>July 15</td>
+                                    <td>Cairo</td>
+                                    <td>
+                                        <a href="viewEvent.html" class="btn btn-primary btn-lg"><i class="fas fa-eye"></i> View</a>
+                                        <a href="editEvent.html" class="btn btn-secondary btn-lg"><i class="fas fa-edit"></i> Edit</a>
+                                        <button class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setEventTitle('Summer Gala 2025')">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <!-- Add more events here -->
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Add Event Section -->
+                <div id="addEvent-section" style="display: none;">
+                    <div class="form-container bg-white p-4 rounded shadow">
+                        <h2 class="text-center text-danger mb-4">Add Event</h2>
+                        <form id="eventForm" asp-controller="organiser" asp-action="CreateEvent" enctype="multipart/form-data" method="post">
+                            <div class="mb-3">
+                                <label asp-for="@Model.EventName" class="form-label">Event Name</label>
+                                <input asp-for="@Model.EventName" class="form-control" placeholder="Event Title" required />
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="@Model.MaxAttendees" class="form-label">Event Seats</label>
+                                    <input asp-for="@Model.MaxAttendees" min="1" required class="form-control" placeholder="Event Seats" />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="@Model.CategoryID" class="form-label">Event Type</label>
+                                    <select asp-for="@Model.CategoryID" asp-items="@categories" class="form-control" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="@Model.Location" class="form-label">Event Location</label>
+                                    <input asp-for="@Model.Location" class="form-control" placeholder="Location" required />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Date</label>
+                                    <input asp-for="EventDate" id="eventDate" class="form-control" />
+                                    <div id="dateError" style="color: red; display: none;"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="@Model.Description" class="form-label">Event Details</label>
+                                <input asp-for="@Model.Description" class="form-control" placeholder="Description" rows="3">
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="@Model.FormFile" class="form-label">Upload Image</label>
+                                <input type="file" asp-for="@Model.FormFile" accept="image/*" class="form-control" required />
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-pink px-4">CREATE NEW EVENT</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Profile Section -->
+                <div id="profile-section" style="display: none;">
+                    <div class="card shadow rounded-3">
+                        <div class="card-body">
+                            <h2 class="text-danger mb-4">Profile Settings</h2>
+                            <div class="row g-4">
+
+                                    <div class="drop-zone" id="drop-zone">
+                                        <p>Drag & drop your profile picture here or click to upload</p>
+                                        <input type="file" id="fileInput" accept="accept=" .jpg, .jpeg, .png"" style="display: none;" />
+                                    </div>
+
+                                
+                                
+                                <div class="col-lg-6">
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><i class="fas fa-lock me-2"></i>Security Settings</h5>
+                                            <div class="mb-3">
+                                                <label class="form-label">Password</label>
+                                                <input type="password" id="new-password" class="form-control" placeholder="NewPassword" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Confirm Password</label>
+                                                <input type="password" id="confirm-password" class="form-control" placeholder="Confirm Password" required>
+                                            </div>
+                                            <span id="passwordMismatch" class="text-danger" style="display: none;">Passwords must match , And can't be empty !</span>
+                                            <button id="update-password" class="btn btn-danger">Update</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><i class="fas fa-user me-2"></i>Profile Settings</h5>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">First Name</label>
+                                                    <input type="text" id="firstName" class="form-control" value="@profile.FName">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Last Name</label>
+                                                    <input type="text" id="lastName" class="form-control" value="@profile.LName">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Email Address</label>
+                                                    <input type="email" id="email" class="form-control" value="@profile.Email">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Organisation Name</label>
+                                                    <input type="text" id="organisationName" class="form-control" value="@profile.OrganizationName">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                            </div>
+                                            <button id="update-profile-button" class="btn btn-danger" ">Update</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tickets Section -->
+                <div id="tickets-section" class="mt-5" style="display: none;">
+                    <h4 class="mb-3">Ticket Bookings</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead style="color: white; background-color:rgb(99, 98, 98);">
+                                <tr>
+                                    <th>ticketID</th>
+                                    <th>EventName</th>
+                                    <th>Location</th>
+                                    <th>Booking Date</th>
+                                    <th>Ticket Code</th>
+                                    <th>EventDate</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="Booking_Table">
+@*                                 @{  int rowNum = 1;
+                                    foreach (TicketResponseDTO ticket in ticketsList)
+                                {
+                                    <tr style="font-size: 18px;">
+                                        <td>rowNum++</td>
+                                        <td>Hanin Ashraf</td>
+                                        <td>hanin@example.com</td>
+                                        <td>@ticket.TicketID</td>
+                                        <td>@ticket.EventName</td>
+                                        <td>@ticket.EventDate</td>
+                                        <td>@ticket.TicketStatus</td>
+                                        <td>
+                                                <button class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setTicketId(@ticket.TicketID)">
+                                                <i class="fas fa-trash-alt"></i> Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                                } *@
+                                <!-- add more tickets here-->
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+     <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const dropZone = document.getElementById("drop-zone");
+        const fileInput = document.getElementById("fileInput");
+        const profileCircle = document.querySelector('.profile-circle')
+
+        if('@profile.Image' != '')
+        {
+        dropZone.style.backgroundImage = `url(/profile-images/@(profile.Image))`;
+        profileCircle.style.backgroundImage = `url(/profile-images/@(profile.Image))`;
+        }
+        dropZone.addEventListener("click", () => fileInput.click());
+
+        dropZone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          dropZone.style.background = "#f0f0f0"; // Change on drag over
+        });
+
+        dropZone.addEventListener("dragleave", () => {
+          dropZone.style.background = "none"; // Revert to account image
+        });
+
+        dropZone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          dropZone.style.background = "none"; // Revert to account image
+          uploadFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener("change", () => {
+          uploadFiles(fileInput.files);
+        });
+
+                function uploadFiles(files) {
+                  const formData = new FormData();
+                  for (let file of files) {
+                    formData.append("file", file);
+                  }
+
+                  fetch("/api/organizer/upload-profile-image", {
+                    method: "POST",
+                    body: formData,
+                  })
+                  .then(res => res.json().then(data => ({ ok: res.ok, body: data })))
+                  .then(result => {
+                    if (result.ok) {
+                      const newImageUrl = `/profile-images/${result.body.safeFileName}`;
+                      dropZone.style.backgroundImage = `url('${newImageUrl}')`;
+                      if(profileCircle) profileCircle.style.backgroundImage = `url('${newImageUrl}')`;
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Upload successful!',
+                        showConfirmButton: false,
+                        timer: 2000
+                      });
+                    } else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Upload failed.',
+                        text: result.body?.message || 'Please try again later.',
+                      });
+                    }
+                  })
+                  .catch(err => {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error occurred!',
+                      text: err.message || 'Something went wrong.',
+                    });
+                  });
+                }
+
+
+            const addEventForm = document.getElementById("eventForm");
+
+            addEventForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+            const dateInput = document.getElementById("eventDate");
+            const errorBox = document.getElementById("dateError");
+
+            const selectedDate = new Date(dateInput.value);
+            const today = new Date();
+
+
+            if (selectedDate <= today) {
+                e.preventDefault(); // Stop form submission
+                errorBox.textContent = "Please select a date after today.";
+                errorBox.style.display = "block";
+            } else {
+                errorBox.style.display = "none";
+                addEventForm.submit();
+            }
+        });
+           DashBoard_Data();
+            function showSection(section) {
+            // إخفاء كل الأقسام أولاً
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('events-section').style.display = 'none';
+            document.getElementById('tickets-section').style.display = 'none';
+            document.getElementById('profile-section').style.display = 'none';
+            document.getElementById('addEvent-section').style.display = 'none';
+            
+            // إظهار القسم المطلوب فقط
+            if (section === 'dashboard') {
+                document.getElementById('dashboard-section').style.display = 'block';
+              DashBoard_Data();
+            } else if (section === 'events') {
+                document.getElementById('events-section').style.display = 'block';
+               Events_Table_Data();
+            } else if (section === 'tickets') {
+                document.getElementById('tickets-section').style.display = 'block';
+                Tickets_Data()
+            } else if (section === 'profile') {
+                 document.getElementById('profile-section').style.display = 'block';
+            } else if (section === 'addEvent') {
+                document.getElementById('addEvent-section').style.display = 'block';
+            }
+        }
+
+             document.getElementById("update-profile-button").addEventListener("click", async function(e) {
+                  e.preventDefault();
+
+                  const firstName = document.getElementById("firstName").value.trim();
+                  const lastName = document.getElementById("lastName").value.trim();
+                  const email = document.getElementById("email").value.trim();
+                  const organization = document.getElementById("organisationName").value.trim();
+
+                  const profileDto = {
+                    organizationName: organization,
+                    email: email ,
+                    fName: firstName,
+                    lName: lastName 
+                  };
+
+                  console.log(profileDto);
+
+                  try {
+                    const response = await fetch('/Api/organizer/profile', {
+                      method: 'PUT',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify(profileDto)
+                    });
+
+                    if (!response.ok) {
+                      const errorData = await response.json();
+                      throw new Error(errorData.title || 'Failed to update profile');
+                    }
+
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Profile updated successfully!',
+                      showConfirmButton: false,
+                      timer: 1500
+                    });
+
+                  } catch (error) {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error',
+                      text: error.message
+                    });
+                  }
+                });
+
+
+                document.getElementById("update-password").addEventListener("click", async function (e) {
+                e.preventDefault();
+                const newPasswordInput = document.getElementById("new-password");
+                const confirmPasswordInput = document.getElementById("confirm-password");
+                const newPassword = newPasswordInput.value.trim();
+                const confirmPassword = confirmPasswordInput.value.trim();
+                const mismatch = document.getElementById("passwordMismatch");
+
+                if (newPassword !== confirmPassword ||newPassword=='' || confirmPassword=='') {
+                mismatch.style.display = 'block';
+                return;
+                }               
+                else {
+                mismatch.style.display = 'none';
+                }
+
+                try {
+                const response = await fetch('/api/organizer/password', {
+                    method: 'PUT',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(confirmPassword)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.title || 'Password update failed');
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Password changed successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                newPasswordInput.value = '';
+                confirmPasswordInput.value = '';
+
+                } catch (error) {
+                console.error('Error:', error.message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message
+                });
+                }
+            });
+
+
+      
+
+            function toggleDropdown() {
+                var dropdown = document.getElementById("eventsDropdown");
+                dropdown.classList.toggle("d-none");
+            }
+
+        let event_Id = null;
+        let event_Name = null;
+
+        async function DashBoard_Data(){
+        return fetch('/Api/organizer/statistics')
+          .then(response => {
+              if (!response.ok) throw new Error("Network response was not ok");
+              return   response.json();
+          })
+          .then(data => {
+                 const Events = document.getElementById("My_Events_Count");
+                 const Tickets = document.getElementById("Total_Tickets_Count");
+                 const Attendees = document.getElementById("Attendees_Count");
+                 Events.innerHTML = data.totalEvents??"0";
+                  Events.innerHTML = data.totalEvents??"0";
+                Tickets.innerHTML=data.totalTickets??"0";
+                Attendees.innerHTML =data.totalAttendees??"0";
+          })
+          .catch(error => {
+              console.error('Fetch error:', error);
+          });
+        
+          }
+
+
+
+
+                 // ---------------------------------------------------------
+                  async function Events_Table_Data() {
+                  const tableBody = document.getElementById("Events_Table");
+                  tableBody.innerHTML = '<tr><td colspan="11">Loading...</td></tr>';
+
+                  try {
+                    const response = await fetch('/Api/organizer/events', {
+                      method: 'GET',
+                      headers: {
+                        'Accept': 'application/json'
+                      }
+                    });
+
+                    if (!response.ok) {
+                      throw new Error(`Network response was not ok: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    tableBody.innerHTML = '';
+
+                    if (!Array.isArray(data) || data.length === 0) {
+                      tableBody.innerHTML = '<tr><td colspan="11">No events found</td></tr>';
+                      return;
+                    }
+
+                    for (const event of data) {
+                      const tr = document.createElement('tr');
+                      tr.style.cssText = 'font-size: 18px; text-align: center;';
+                      tr.innerHTML = `
+                        <td>${event.eventID}</td>
+                        <td>${event.eventName || 'N/A'}</td>
+                        <td>${event.eventDate ? new Date(event.eventDate).toLocaleDateString() : 'N/A'}</td>
+                        <td>${event.location || 'N/A'}</td>
+                        <td>
+                          <a href="/Organiser/ViewEvent?id=${event.eventID}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> View</a>
+                          <a href="/Organiser/EditEvent?id=${event.eventID}" class="btn btn-secondary btn-sm"><i class="fas fa-edit"></i> Edit</a>
+                          <button class="btn btn-danger btn-sm" onclick="confirmDelete('${event.eventID}', '${event.eventName}')">
+                            <i class="fas fa-trash-alt"></i> Delete
+                          </button>
+                        </td>
+                      `;
+                      tableBody.appendChild(tr);
+                    }
+                  } catch (error) {
+                    console.error('Fetch error:', error);
+                    tableBody.innerHTML = '<tr><td colspan="11">Error loading events</td></tr>';
+                  }
+                }
+
+                function confirmDelete(eventID, eventName) {
+                    Swal.fire({
+                    title: `Delete "${eventName}"?`,
+                    text: "Are you sure you want to delete this event?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#6c757d",
+                    confirmButtonText: "Yes, delete it"
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteEvent(eventID, eventName);
+                    }
+                    });
+                }
+
+
+                async function deleteEvent(eventID, eventName) {
+                    try {
+                    const response = await fetch(`/Api/Organizer/events/${eventID}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        Swal.fire('Deleted!', `"${eventName}" has been deleted.`, 'success');
+                        Events_Table_Data(); // Reload the table after deletion
+                    } else {
+                        Swal.fire('Error!', 'Failed to delete event. Please try again.', 'error');
+                    }
+                    } catch (error) {
+                    console.error('Error:', error);
+                    Swal.fire('Error!', 'An error occurred while deleting the event.', 'error');
+                    }
+                }
+
+
+
+                // -------------------------------------------------------------------
+                async function Tickets_Data() {
+                const tableBody = document.getElementById("Booking_Table");
+                tableBody.innerHTML = '<tr><td colspan="11">Loading...</td></tr>';
+
+                try {
+                    const response = await fetch('/api/organizer/tickets', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) throw new Error('Network response was not ok');
+
+                    const data = await response.json();
+                    tableBody.innerHTML = '';
+
+                    if (!Array.isArray(data) || data.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="11">No tickets found</td></tr>';
+                        return;
+                    }
+
+                    for (const t of data) {
+                        const tr = document.createElement('tr');
+                        tr.style.fontSize = '18px';
+                        tr.innerHTML = `
+                            <td>${t.ticketID}</td>
+                            <td>${t.eventName || 'N/A'}</td>
+                            <td>${t.location || 'N/A'}</td>
+                            <td>${t.bookingDate || 'N/A'}</td>
+                            <td>${t.ticketCode || 'N/A'}</td>
+                            <td>${t.eventDate ? new Date(t.eventDate).toLocaleDateString() : 'N/A'}</td>
+                            <td>${t.ticketStatus || 'N/A'}</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm" onclick="confirmDeleteTicket(${t.ticketID}, '${escapeHtml(t.ticketCode)}')">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </td>
+                        `;
+                        tableBody.appendChild(tr);
+                    }
+                } catch(error) {
+                    console.error('Error:', error.message);
+                    tableBody.innerHTML = '<tr><td colspan="11">Error loading tickets</td></tr>';
+                }
+            }
+
+            // Helper function to escape HTML special characters
+            function escapeHtml(str) {
+                if (!str) return '';
+                return str.replace(/&/g, "&amp;")
+                         .replace(/</g, "&lt;")
+                         .replace(/>/g, "&gt;")
+                         .replace(/"/g, "&quot;")
+                         .replace(/'/g, "&#039;");
+            }
+
+            function confirmDeleteTicket(ticketID, ticketCode) {
+                Swal.fire({
+                    title: `Delete Ticket "${ticketCode}"?`,
+                    text: "Are you sure you want to delete this ticket?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#6c757d",
+                    confirmButtonText: "Yes, delete it"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteTicket(ticketID, ticketCode);
+                    }
+                });
+            }
+
+            async function deleteTicket(ticketID, ticketCode) {
+                try {
+                    const response = await fetch(`/api/organizer/tickets/${ticketID}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        Swal.fire('Deleted!', `Ticket "${ticketCode}" has been deleted.`, 'success');
+                        Tickets_Data(); // Reload ticket table
+                    } else {
+                        // Try to get error message from response
+                        let errorMsg = 'Failed to delete ticket';
+                        try {
+                            const errorData = await response.json();
+                            errorMsg = errorData.message || errorMsg;
+                        } catch (e) {
+                            console.error('Error parsing error response:', e);
+                        }
+                        Swal.fire('Error!', errorMsg, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    Swal.fire('Error!', 'An error occurred while deleting the ticket.', 'error');
+                }
+            }
+
+
+
+    </script>
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        </body>
+    </html>

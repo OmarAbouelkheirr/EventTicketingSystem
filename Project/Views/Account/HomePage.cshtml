@@ -1,0 +1,505 @@
+@using EventBookingSystem.Models
+@{
+    Layout = "_HomePageLayout";
+    Person? person = ViewBag.Person as Person;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title> EventHub</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+        --pink: #e83e8c;
+        }
+
+        body {
+        background-color: #fef6fb;
+        font-family: 'Roboto', sans-serif;
+
+        }
+
+        /* Navbar */
+        .nav-link {
+        font-size: 1.1rem; 
+        transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+        color: #ec4899 !important;
+        }
+
+        .hover-bg-pink:hover {
+        background-color: #ec4899 !important;
+        color: white !important;
+        }
+
+        .main-banner {
+        height: 100vh;
+        object-fit: cover;
+        width: 100%;
+        }
+
+        .overlay {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        }
+
+        .overlay h1 {
+        font-size: 1.5rem;
+        }
+
+        .overlay h2 {
+        font-size: 5rem;
+        color:rgb(132 204 22);
+        }
+
+        .overlay h3 {
+        font-size: 4rem;
+        }
+
+        .overlay p {
+        font-size: 1.25rem;
+        max-width: 700px;
+        }
+
+        .btn-see-more {
+        font-size: 1.1rem;
+        padding: 12px 24px;
+        border-radius: 10px;
+        }
+
+        /* ----------------Events---------------- */
+        .hover-bg-dark-gray:hover {
+        background-color: #4b5563;
+        color: white !important;
+        }
+        .text-pink {
+        color: #e83e8c !important;
+        }
+        .btn-pink {
+        background-color: #e83e8c;
+        color: white;
+        border: 1px solid #e83e8c;
+        transition: 0.3s;
+        }
+        .btn-pink:hover {
+        background-color: white;
+        color: #e83e8c;
+        }
+
+        a[data-category]{
+        cursor:pointer;
+        }
+        /* How it Works */
+        .timeline-box {
+        background-color: #fff;
+        border-left: 5px solid var(--pink);
+        padding: 20px 20px 20px 60px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        margin-bottom: 30px;
+        position: relative;
+        }
+
+        .timeline-box::before {
+        content: '';
+        width: 14px;
+        height: 14px;
+        background-color: var(--pink);
+        border-radius: 50%;
+        position: absolute;
+        left: 18px;
+        top: 24px;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 2px var(--pink);
+        }
+
+        .timeline-box h5 {
+        font-weight: 600;
+        color: var(--pink);
+        }
+
+        .timeline-box p {
+        margin-bottom: 0;
+        color: #333;
+        }
+
+        .icon-bi {
+        font-size: 1.3rem;
+        color: var(--pink);
+        margin-right: 8px;
+        vertical-align: middle;
+        }
+
+        .how-it-works h2 {
+        font-weight: bold;
+        color: var(--pink);
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <!-- Main Section -->
+    <main class="position-relative" id="home-section">
+        <img src="/img/p_banner.jpg" alt="Wedding event with lights and decorations" class="main-banner">
+
+        <div class="overlay d-flex flex-column justify-content-center px-4 px-md-5">
+            <div class="container text-start">
+                <h1 class="text-white fw-bold">Dream Craft Events</h1>
+                <h3 class="text-white fw-bold mt-2">Our Events</h3>
+                <h2 class=" fw-bold mt-2">Book Now!</h2>
+                <p class="text-white mt-3">
+                    From elegant soirées to lively gatherings, we curate diverse events for every occasion,
+                    guaranteeing a memorable experience for all guests.
+                </p>
+                <a asp-action="Login" class="btn btn-see-more text-white mt-4" style="background-color: #ec4899;">See More</a>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- about start -->
+    <section class="about py-5" id="about-section" style="background-color: #fdf2f8;">
+        <div class="container">
+            <!-- <h2 class="text-center fw-bold mb-5" style="color: #d21272;">
+            <span style="color: #ec4899;">About</span> Us
+            </h2> -->
+            <h2 class="text-center fw-bold mb-5 bg-white" style="padding: 7px;">About <span class="text-pink">Us</span> </h2>
+
+            <div class="row align-items-center">
+                <!-- Image -->
+                <div class="col-md-6 mb-4 mb-md-0 text-center">
+                    <img src="/img/about.png" alt="About Image" class="img-fluid rounded shadow" style="max-height: 350px;">
+                </div>
+
+                <!-- Content -->
+                <div class="col-md-6">
+                    <h3 class="fw-semibold mb-3" style="color: #d21272;">About EventHub</h3>
+                    <p class="text-muted">
+                        EventHub is your all-in-one platform for creating, managing, and hosting events with ease.
+                        Whether it's a concert, workshop, or conference – we provide tools that simplify the process from start to finish.
+                    </p>
+                    <p class="text-muted">
+                        Our goal is to empower organizers and engage attendees by offering a smooth, modern experience.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose EventHub? -->
+    <section class="py-5 bg-light">
+        <div class="container text-center">
+            <h2 class="mb-4 fw-bold">Why Choose EventHub?</h2>
+            <div class="row gy-4">
+                <div class="col-md-3">
+                    <i class="fas fa-bolt fa-2x mb-3 text-pink"></i>
+                    <h5>Quick Booking</h5>
+                    <p class="text-muted">Book your events in just a few clicks!</p>
+                </div>
+                <div class="col-md-3">
+                    <i class="fas fa-headset fa-2x mb-3 text-pink"></i>
+                    <h5>24/7 Support</h5>
+                    <p class="text-muted">We are always here to help you.</p>
+                </div>
+                <div class="col-md-3">
+                    <i class="fas fa-cogs fa-2x mb-3 text-pink"></i>
+                    <h5>Easy Management</h5>
+                    <p class="text-muted">Manage and monitor your events easily.</p>
+                </div>
+                <div class="col-md-3">
+                    <i class="fas fa-lock fa-2x mb-3 text-pink"></i>
+                    <h5>Secure System</h5>
+                    <p class="text-muted">Your data and payments are safe.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    <!-- How It Works Section -->
+    <section class="container py-5 how-it-works">
+        <h2 class="text-center mb-5">How Does It Work?</h2>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+
+                <div class="timeline-box" data-aos="fade-up">
+                    <h5>
+                        <i class="bi bi-calendar-event icon-bi"></i>
+                        Step 1: Organiser Schedules Events
+                    </h5>
+                    <p>Organisers create and publish events with details like date, time, location, and ticket availability.</p>
+                </div>
+
+                <div class="timeline-box" data-aos="fade-up" data-aos-delay="100">
+                    <h5>
+                        <i class="bi bi-ticket-detailed icon-bi"></i>
+                        Step 2: Attendee Buys Ticket
+                    </h5>
+                    <p>Attendees browse events, purchase tickets, and receive a <strong>unique, one-time-use</strong> digital ticket.</p>
+                </div>
+
+                <div class="timeline-box" data-aos="fade-up" data-aos-delay="200">
+                    <h5>
+                        <i class="bi bi-upc-scan icon-bi"></i>
+                        Step 3: Ticket Scanning at Event
+                    </h5>
+                    <p>Organisers scan tickets at the entrance to verify authenticity and allow entry.</p>
+                </div>
+
+                <div class="timeline-box" data-aos="fade-up" data-aos-delay="300">
+                    <h5>
+                        <i class="bi bi-emoji-smile icon-bi"></i>
+                        Step 4: Enjoy the Event
+                    </h5>
+                    <p>Attendees enjoy the event with verified access, and organisers manage attendance smoothly.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    @* Call to Action (CTA) *@
+    <section class="py-5 text-black text-center" style="background-color: rgba(252, 252, 252, 0.997);">
+        <div class="container">
+            <h2 class="fw-bold mb-3">Ready to host your next event?</h2>
+            <p class="mb-4">Let us help you make it unforgettable.</p>
+            <a href="/organiser/Dashboard" class="btn btn-danger px-4 py-2">Get Started</a>
+        </div>
+    </section>
+
+@*     <!-- Events Section -->
+    <div class="container py-4" id="events-section">
+        <h1 class="text-center fw-bold mb-5">ALL <span class="text-pink">EVENTS</span> </h1>
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 mb-4">
+                <div class="bg-white p-3 rounded shadow">
+                    <h2 class="h5 fw-bold mb-3 d-flex align-items-center bg-danger text-white p-2 rounded">
+                        <i class="fas fa-th-large me-2 "></i> Category
+                    </h2>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a class="text-decoration-none text-dark p-2 d-block rounded hover-bg-dark-gray" data-category="All">All</a>
+                        </li>
+                        @foreach(var x in Categories)
+                        {
+
+                            <li class="mb-2">
+                                <a class="text-decoration-none text-dark p-2 d-block rounded hover-bg-dark-gray" data-category="@x.CategoryName">@x.CategoryName</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <div class="row g-4" id="event-cards-container">
+
+                    <!-- Event Card (Sample Category: Technology) -->
+
+                    <div class="row g-4">
+
+                        @foreach (var x in Events)
+                        {
+
+                            bool isUpcoming = x.EventDate > DateTime.Now;
+
+
+                            <div class="col-md-6 col-lg-4 Evnets" data-name="@x.EventName" data-category="@x.Category.CategoryName"  data-date="@x.EventDate">
+                                <div class="card event-card h-100 position-relative">
+
+                                    <img src="/event-images/@x.Image" class="card-img-top" alt="Event Image">
+
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">@x.EventName</h5>
+                                        <div class="card-text mb-3 flex-grow-1">
+                                            <span><i class="fas fa-calendar-alt"></i> @x.EventDate</span>
+                                            <span><i class="fas fa-tag"></i> @x.Category.CategoryName</span>
+                                            <span><i class="fas fa-ticket-alt"></i> @x.MaxAttendees </span>
+                                        </div>
+                                        @if (person?.Role != null)
+                                        {
+                                            var role = person.Role;
+                                            switch(role)
+                                            {
+                                                case "Organizer":
+                                            <a asp-controller="Organiser" asp-action="ViewEvent" asp-route-id="@x.EventID" class="btn btn-pink mt-auto align-self-start">View Details</a>
+                                                    break;
+                                                    case "Admin":
+                                                    <a asp-controller="Admin" asp-action="ViewEvent" asp-route-id="@x.EventID" class="btn btn-pink mt-auto align-self-start">View Details</a>
+                                                    break;
+                                                case "Attendee":
+                                                    <a asp-controller="Attendee" asp-action="ViewEvent" asp-route-id="@x.EventID" class="btn btn-pink mt-auto align-self-start">View Details</a>
+                                                    break;
+                                            }
+                                        }
+                                    </div>
+
+                                    <!-- Status Badge in Bottom-Right Corner with Small Margin -->
+                                    <div class="position-absolute bottom-0 end-0 mb-2 me-2 text-danger text-end">
+                                        @if (isUpcoming)
+                                        {
+                                            <div>
+                                                <i class="fas fa-clock fa-2x"></i><br />
+                                                <small><strong>Upcoming</strong></small>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                <i class="fas fa-times-circle fa-2x"></i><br />
+                                                <small><strong>Ended</strong></small>
+                                            </div>
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        }
+
+
+                    </div>
+
+
+ @*                    @{foreach(var x in Events)
+                    {
+
+                        <div class="col-sm-6 event-card" data-category="@x.Category.CategoryName">
+                            <div class="card shadow">
+                                <img src="/event-images/@(x.Image)" class="card-img-top" alt="Tech Expo 2024">
+                                <div class="card-body">
+                                    <div class="text-muted mb-2">
+                                        <i class="fas fa-calendar-alt me-2 text-pink"></i> @x.EventDate
+                                        <i class="fas fa-map-marker-alt ms-3 me-2 text-pink"></i> @x.Location
+                                    </div>
+                                    <h5 class="card-title fw-bold">@x.EventName</h5>
+
+                                    <div class="d-flex align-items-center mt-3">
+                                        <i class="fas fa-users fa-lg text-pink me-2" style="font-size: 1.5rem;"></i>
+                                        <span class="text-muted">@x.MaxAttendees Max Attendees</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    } 
+
+                </div>
+            </div>
+        </div>
+    </div>
+ *@
+
+
+    <!-- footer section  -->
+    <footer class="py-5 bg-white">
+        <div class="container">
+
+            <!-- Top Footer Content -->
+            <div class="row gy-4 justify-content-between">
+                <!-- Logo and Description -->
+                <div class="col-md-5">
+                    <div class="h4 fw-bold mb-3">
+                        <i class="fas fa-tv" style="color: #d21272;"></i> EventHub
+                    </div>
+                    <p class="text-muted mb-3">
+                        At Dream Craft Events, we specialize in turning your events into extraordinary experiences. Our Event Management System is crafted to simplify every aspect of planning, booking, and execution.
+                    </p>
+                    <div class="d-flex gap-3 mt-3">
+                        <a href="#" style="color: #ec4899;"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" style="color: #ec4899;"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" style="color: #ec4899;"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" style="color: #ec4899;"><i class="fab fa-github fa-lg"></i></a>
+                        <a href="#" style="color: #ec4899;"><i class="fab fa-dribbble fa-lg"></i></a>
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-md-5" id="contact-section">
+                    <h5 class="fw-semibold mb-3">Contact Us</h5>
+                    <ul class="list-unstyled">
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="fas fa-envelope me-2" style="color: #ec4899;"></i>
+                            <span class="text-muted">info@eventhub.com</span>
+                        </li>
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="fas fa-phone me-2" style="color: #ec4899;"></i>
+                            <span class="text-muted">+8801916498482</span>
+                        </li>
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="fas fa-map-marker-alt me-2" style="color: #ec4899;"></i>
+                            <span class="text-muted">1213 Dhaka, Bangladesh</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center border-top pt-4 mt-5 gap-3">
+                <p class="text-muted mb-0 small" style="font-size: 16px;">© 2025 EventHub</p>
+                <p class="text-muted mb-0 small" style="font-size: 16px;">All rights reserved.</p>
+                <img src="/img/logo.png" alt="Chatbot icon" class="img-fluid" style="width:80px;">
+            </div>
+
+        </div>
+    </footer>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        // JavaScript to handle category filtering
+            // Get all category links
+            const categoryLinks = document.querySelectorAll('a[data-category]');
+            const eventCards = document.querySelectorAll('.event-card');
+
+            // Attach click event to each category link
+            categoryLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+
+                    const selectedCategory = event.target.getAttribute('data-category');
+
+                    // Filter event cards based on selected category
+                    eventCards.forEach(card => {
+                        const cardCategory = card.getAttribute('data-category');
+                        console.log(selectedCategory === "All" || selectedCategory === cardCategory)
+                        if (selectedCategory === "All" || selectedCategory === cardCategory) {
+                            card.style.display = "block";  // Show matching cards
+                        } else {
+                            card.style.display = "none";  // Hide non-matching cards
+                        }
+                    });
+                });
+            });
+
+            AOS.init();
+    </script>
+
+ 
+</body>
+</html>

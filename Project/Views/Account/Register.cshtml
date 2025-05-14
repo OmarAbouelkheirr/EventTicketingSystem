@@ -1,0 +1,218 @@
+@using EventBookingSystem.DTOs
+@model RegisterDTO
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - EventHub</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .error-box {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 0; /* Add padding for smaller screens */
+        }
+        .signup-container {
+            max-width: 500px;
+            width: 100%;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            background-color: #0c1427; /* Dark blue from admin sidebar */
+            color: white;
+            text-align: center;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            padding: 20px;
+        }
+        .card-header h3 {
+            margin: 0;
+            font-weight: bold;
+        }
+        .card-header i {
+            margin-right: 10px;
+        }
+        .btn-pink {
+            background-color: #ec4899;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            font-weight: bold;
+        }
+        .btn-pink:hover {
+            background-color: #d03682;
+            color: white;
+        }
+        .form-control:focus {
+            border-color: #ec4899;
+            box-shadow: 0 0 0 0.25rem rgba(236, 72, 153, 0.25);
+        }
+        .text-pink {
+            color: #ec4899;
+        }
+        .text-pink:hover {
+            color: #d03682;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-user-plus"></i>Create Your EventHub Account</h3>
+            </div>
+
+            <div class="card-body p-4">
+                @if (ViewBag.Success != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                        @ViewBag.Success
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                <div id="errorBox" style="display:none;" class="error-box"></div>
+
+                @if (ViewBag.Message!=null)
+                {
+                    <div class="alert alert-warning mt-2" role="alert">
+                        @ViewBag.Message
+                    </div>
+                }
+                <form asp-action="Register" method="post">
+                    <div class="mb-3">
+                        <label asp-for="@Model.FName" class="form-label">First Name</label>
+                        <input asp-for="@Model.FName" class="form-control" id="fullName" placeholder="Enter your first name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="@Model.LName" class="form-label">Last Name</label>
+                        <input asp-for="@Model.LName" class="form-control" id="LastName" placeholder="Enter your last name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="@Model.Email" class="form-label">Email address</label>
+                        <input asp-for="@Model.Email" class="form-control" id="email" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="@Model.Password" class="form-label">Password</label>
+                        <input asp-for="@Model.Password" class="form-control" id="password" placeholder="Create a password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Role</label>
+                        <select asp-for="Role" class="form-select" id="roleSelect">
+                            <option value="Attendee">Attendee</option>
+                            <option value="Organizer">Organizer</option>
+                        </select>
+
+                    </div>
+                    <div id="organizerField" style="display:none;">
+
+                        <label asp-for="@Model.OrganizationName" class="form-label">Organisation name</label>
+                        <input asp-for="@Model.OrganizationName" type="text" class="form-control" id="organisationName" >
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-pink mt-3">Sign Up</button>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Account" asp-action="HomePage" class="btn btn-pink mt-3">
+                            <i class="fas fa-home me-2"></i> Home
+                        </a>
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <p>Already have an account? <a href="/Account/login" class="text-pink fw-bold text-decoration-none">Login</a></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const roleSelect = document.getElementById("roleSelect");
+        const organizerFields = document.getElementById("organizerField");
+        const password = document.getElementById("password");
+        const confirmPassword = document.getElementById("confirmPassword");
+        const email = document.getElementById("email");
+        const errorBox = document.getElementById("errorBox");
+        const form = document.querySelector("form");
+
+        const emailPattern = /^\S+@@\S+\.\S+$/;
+
+
+
+            form.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const passwordValue = password.value;
+            const confirmPasswordValue = confirmPassword.value;
+
+            const errorMessages = [];
+
+                if (!emailPattern.test(email.value)) {
+                    errorMessages.push("Please enter a valid email address.");
+                }
+
+            // Check if passwords match
+            if (passwordValue !== confirmPasswordValue) {
+                errorMessages.push("Passwords do not match.");
+            }
+
+            // Check minimum length
+            if (passwordValue.length < 8) {
+                errorMessages.push("Password must be at least 8 characters long.");
+            }
+
+
+                if (errorMessages.length > 0) {
+                errorBox.style.display = "block";
+                errorBox.innerHTML = errorMessages.map(msg => `<div>• ${msg}</div>`).join("");
+            } else {
+                errorBox.style.display = "none";
+                form.submit(); // or your custom submit logic
+            }
+
+        });
+
+
+        roleSelect.addEventListener("change", function () {
+            const role = this.value;
+            organizerFields.style.display = (role === "Organizer") ? "block" : "none";
+        });
+
+    </script>
+</body>
+</html>

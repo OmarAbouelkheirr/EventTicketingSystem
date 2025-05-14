@@ -1,0 +1,136 @@
+@using EventBookingSystem.DTOs;
+@model EventUpdateDTO;
+@{
+    int? eventId =ViewBag.EventId as int?;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Event</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+
+        .header {
+            color: #ec4899;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card p-4">
+            <h3 class="header mb-4">Edit Event</h3>
+            <form id="eventForm">
+                <div class="mb-3">
+                    <label asp-for=@Model.EventName class="form-label">Event Title</label>
+                    <input asp-for=@Model.EventName type="text" class="form-control" value="@Model.EventName">
+                </div>
+                <div class="mb-3">
+                    <label asp-for=@Model.EventDate class="form-label">Date</label>
+                    <input asp-for=@Model.EventDate id="eventDate"  class="form-control" value="@Model.EventDate">
+
+                    <div id="dateError" style="color: red; display: none;"></div>
+                </div>
+                <div class="mb-3">
+                    <label asp-for=@Model.Location class="form-label">Location</label>
+                    <input asp-for=@Model.Location type="text" class="form-control" value="@Model.Location">
+                </div>
+                <div class="mb-3">
+                    <label asp-for=@Model.Description class="form-label">Description</label>
+                    <textarea asp-for=@Model.Description class ="form-control" rows="3">@Model.Description</textarea>
+                </div>
+                <button type="submit" class="btn text-white" style="background-color: #ec4899;">Save Changes</button>
+                <a onclick="window.history.back()" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+
+
+                const editEventForm = document.getElementById("eventForm");
+
+                editEventForm.addEventListener("submit", async function (e) {
+                    e.preventDefault();
+            const dateInput = document.getElementById("eventDate");
+            const errorBox = document.getElementById("dateError");
+
+            const selectedDate = new Date(dateInput.value);
+            const today = new Date();
+
+
+            if (selectedDate <= today) {
+                e.preventDefault(); // Stop form submission
+                errorBox.textContent = "Please select a date after today.";
+                errorBox.style.display = "block";
+            } else {
+                errorBox.style.display = "none";
+                await submit(e);
+            }
+        });
+
+
+             async function submit(e) {
+                e.preventDefault();  // Prevent the form from submitting normally
+
+                const formData = new FormData(e.target);
+                const rawData = Object.fromEntries(formData.entries());
+
+                // Insert values from Razor into the JavaScript object
+                const eventData = {
+                    "EventName": rawData.EventName,
+                    "Description": rawData.Description,
+                    "EventDate": new Date(rawData.EventDate).toISOString(),
+                    "Location": rawData.Location,
+                    "MaxAttendees": '@Model.MaxAttendees',
+                    "Image": '@Model.Image',
+                    "CategoryID": '@Model.CategoryID'
+                };
+
+                try {
+                    const response = await fetch(`/api/Admin/events/${'@eventId'}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(eventData)
+                    });
+
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Event updated successfully!',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Update Failed',
+                            text: 'Failed to update event.'
+                        });
+                    }
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while updating the event.'
+                    });
+                }
+            }
+
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+@using EventBookingSystem.DTOs
+@model EventResponseDTO;
+@{
+    int? eventId = ViewBag.EventId as int?;
+}
+
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>View Event</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+            <style>
+                body {
+                background-color: #f8f9fa;
+                }
+                .card {
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                border-radius: 10px;
+                }
+                .header {
+                color: #ec4899;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container mt-5">
+                <div class="card p-4">
+                    <h3 class="header">Event Details</h3>
+                    <p><strong>Title:</strong> @Model.EventName</p>
+            <p><strong>Date:</strong> @Model.EventDate.ToString("yyyy-MM-dd")</p>
+                    <p><strong>Location:</strong> @Model.Location</p>
+                    <p><strong>Seats:</strong> @Model.MaxAttendees</p>
+                    <p><strong>Type:</strong> @Model.CategoryName</p>
+                    <p><strong>Description:</strong> @Model.Description</p>
+            <a onclick="window.history.back()" class="btn mt-3" style="color: white;background-color: #ec4899;">Back to Dashboard</a>
+
+                </div>
+            </div>
+        </body>
+    </html>

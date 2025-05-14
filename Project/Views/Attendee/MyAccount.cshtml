@@ -1,0 +1,318 @@
+@using EventBookingSystem.Models
+@model Person
+@{
+    Layout = "_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - EventHub</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #0c1427; /* Dark blue from admin sidebar */
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .nav-link:hover {
+            color: #ec4899 !important; /* Pink accent */
+        }
+        .navbar-brand i {
+            color: #ec4899; /* Pink accent for logo icon */
+        }
+        .page-header {
+            background-color: #ffffff;
+            padding: 15px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .page-header h2 {
+            color: #0c1427;
+            margin-bottom: 0;
+        }
+        .account-section {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .account-section h4 {
+            color: #0c1427;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ec4899;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .form-control:focus {
+            border-color: #ec4899;
+            box-shadow: 0 0 0 0.25rem rgba(236, 72, 153, 0.25);
+        }
+        .btn-pink {
+            background-color: #ec4899;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+        }
+        .btn-pink:hover {
+            background-color: #d03682;
+            color: white;
+        }
+        .btn-outline-secondary {
+             border-color: #6c757d;
+             color: #6c757d;
+        }
+        .btn-outline-secondary:hover {
+             background-color: #6c757d;
+             color: white;
+        }
+        .btn-danger {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .footer {
+            background-color: #ffffff;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+            color: #6c757d;
+        }
+
+        .drop-zone {
+            width: 300px; /* Fixed width */
+            height: 300px; /* Same height = square, avoids distortion */
+            border: 2px dashed #ccc;
+            background-size: contain; /* or "cover" for full coverage, might crop */
+            background-repeat: no-repeat;
+            background-position: center;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 50%;
+        }
+            .drop-zone:hover {
+                border-color: #888;
+                background-color: #f5f5f5;
+            }
+    </style>
+</head>
+<body>
+
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h2 class="fw-bold">My Account Settings</h2>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+
+                <!-- Personal Information Section -->
+                <div class="account-section">
+
+                    <div class="drop-zone" id="drop-zone">
+                        <p>Drag & drop your profile picture here or click to upload</p>
+                        <input type="file" id="fileInput" accept="accept=" .jpg, .jpeg, .png"" style="display: none;" />
+                    </div>
+                    </div>
+                <div class="account-section">
+                    <h4>Personal Information</h4>
+                    <form asp-action="ChangeProfileInfo">
+                        <div class="mb-3">
+                            <label asp-for="@Model.FName" class="form-label">First Name</label>
+                            <input asp-for="@Model.FName" class="form-control" value="@Model.FName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="@Model.LName" class="form-label">Last Name</label>
+                            <input asp-for="@Model.LName" class="form-control" value="@Model.LName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="@Model.Email" class="form-label">Email Address</label>
+                            <input asp-for="@Model.Email" class="form-control" id="accountEmail" value="@Model.Email" required>
+                        </div>
+                        <button type="submit" class="btn btn-pink">Save Changes</button>
+                    </form>
+                </div>
+
+                <!-- Change Password Section -->
+                <div class="account-section">
+                    <h4>Change Password</h4>
+                    <form id="password-form" asp-action="ChangePassword">
+                        <div class="mb-3">
+                            <label for="currentPassword" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" placeholder="Enter your current password" required>
+
+                            @if (ViewBag.PasswordError != null)
+                            {
+                                <span class="text-danger">@ViewBag.PasswordError</span>
+                            }
+
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="Enter a new password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirmNewPassword" name="confirmPassword" placeholder="Confirm your new password" required>
+                            <span id="passwordMismatchError" class="text-danger d-none">
+                              Password mismatch.
+                            </span>
+                        </div>
+
+                        <button id="update-password" type="submit" class="btn btn-pink">Update Password</button>
+
+                        <br />
+
+                        @if (ViewBag.Success != null)
+                        {
+                            <span class="text-success">@ViewBag.Success</span>
+                        }
+
+
+                    </form>
+                </div>
+
+                <!-- Logout Section -->
+                <div class="account-section text-center">
+                    <h4>Logout</h4>
+                    <p>Click the button below to securely log out of your account.</p>
+                    <a asp-controller="Account" asp-action="logout" class="btn btn-danger">Logout Now</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+            const passwordMismatchError = document.getElementById("passwordMismatchError");
+            const passwordForm = document.getElementById("password-form");
+
+        passwordForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+     const formData = new FormData(this); // 'this' is the form element
+
+    const newPassword = formData.get("newPassword")
+    const confirmPassword = formData.get("confirmPassword")
+
+    if (newPassword !== confirmPassword) {
+                        passwordMismatchError.classList.remove('d-none');
+            passwordMismatchError.classList.add('d-block');
+    }
+    else
+            {
+                            passwordMismatchError.classList.remove('d-block');
+            passwordMismatchError.classList.add('d-none');
+                passwordMismatchError.style.display='none';
+        e.target.submit();
+    }   
+    }
+    );
+
+           const dropZone = document.getElementById("drop-zone");
+            const fileInput = document.getElementById("fileInput");
+
+            if('@Model.Image' == '')
+            {
+            dropZone.style.backgroundImage = `url(/profile-images/default-profile.jpg)`;
+            }
+            else
+            {
+                dropZone.style.backgroundImage = `url(/profile-images/@(Model.Image))`;
+            }
+            dropZone.addEventListener("click", () => fileInput.click());
+
+            dropZone.addEventListener("dragover", (e) => {
+              e.preventDefault();
+              dropZone.style.background = "#f0f0f0"; // Change on drag over
+            });
+
+            dropZone.addEventListener("dragleave", () => {
+              dropZone.style.background = "none"; // Revert to account image
+            });
+
+            dropZone.addEventListener("drop", (e) => {
+              e.preventDefault();
+              dropZone.style.background = "none"; // Revert to account image
+              uploadFiles(e.dataTransfer.files);
+            });
+
+            fileInput.addEventListener("change", () => {
+              uploadFiles(fileInput.files);
+            });
+
+                function uploadFiles(files) {
+                    const formData = new FormData();
+                    for (let file of files) {
+                    formData.append("file", file);
+                    }
+
+                    fetch("/api/Attendee/upload-profile-image", {
+                    method: "POST",
+                    body: formData,
+                    })
+                    .then(res => res.json().then(data => ({ ok: res.ok, body: data })))
+                    .then(result => {
+                        if (result.ok) {
+                            // تحديث الخلفية مباشرة
+                            const newImageUrl = `/profile-images/${result.body.safeFileName}`;
+                            dropZone.style.backgroundImage = `url('${newImageUrl}')`;
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Upload successful!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Upload failed.',
+                                text: result.body?.message || 'Please try again.'
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        Swal.fire({
+                        icon: 'error',
+                        title: 'Error occurred',
+                        text: err.message
+                        });
+                    });
+                }
+
+    </script>
+</body>
+</html>

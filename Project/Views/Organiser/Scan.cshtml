@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Scanner - EventHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/dist/html5-qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        .btn-pink {
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+        }
+
+            .btn-pink:hover {
+                background-color: #ff85c1;
+            }
+        :root {
+            --primary-color: #0c1427;
+            --secondary-color: #ec4899;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 15px;
+        }
+        
+        .scanner-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 1rem auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        #qr-reader {
+            width: 100%;
+            margin-bottom: 20px;
+            position: relative;
+            min-height: 300px;
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: #f1f1f1;
+        }
+        
+        #qr-reader__dashboard_section_csr {
+            padding: 10px;
+        }
+        
+        #qr-reader__dashboard_section_csr button {
+            margin: 5px;
+            font-size: 0.9rem;
+        }
+        
+        #scan-result {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+        
+        .result-success {
+            background-color: rgba(40, 167, 69, 0.15);
+            color: var(--success-color);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+        
+        .result-error {
+            background-color: rgba(220, 53, 69, 0.15);
+            color: var(--danger-color);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+        
+        .loading-spinner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255,255,255,0.8);
+            z-index: 10;
+        }
+        
+        .btn-scan-again {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-scan-again:hover {
+            background-color: #d03682;
+            border-color: #d03682;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        #result-message {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        #result-details {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* تعديلات للهواتف الصغيرة */
+        @@media (max-width: 576px) {
+            .scanner-container {
+                padding: 15px;
+                margin: 0.5rem auto;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            #qr-reader {
+                min-height: 250px;
+            }
+            
+            #scan-result {
+                padding: 15px;
+            }
+            
+            #result-message {
+                font-size: 1.3rem;
+            }
+            
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* تعديلات للأجهزة اللوحية */
+        @@media (min-width: 577px) and (max-width: 768px) {
+            .scanner-container {
+                max-width: 500px;
+            }
+        }
+        
+        /* تأثيرات للتفاعل */
+        button {
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="scanner-container">
+            <h2 class="text-center mb-4"><i class="fas fa-qrcode"></i> QR Scanner</h2>
+            <div id="qr-reader">
+                <div class="loading-spinner" id="loading-spinner">
+                    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">Preparing camera...</p>
+                </div>
+            </div>
+            <div id="scan-result">
+                <h3 id="result-message"></h3>
+                <p id="result-details" class="mb-4"></p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <button id="scan-again" class="btn btn-scan-again me-md-2">
+                        <i class="fas fa-redo me-2"></i> Scan Again
+                    </button>
+
+                    <a asp-controller="Organizer" asp-action="Dashboard" class="btn mt-3" style="color: white;background-color: #ec4899;">Go Back</a>
+                </div>
+            </div>
+            <div class="text-center mt-5 ">
+                <button onclick="history.back()" class="btn btn-pink px-4 py-2">
+                    ← Back
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // var scanner = new Html5QrcodeScanner('qr-reader',{
+        //     qrbox:{width:250,height:250 },
+        //     fps:20
+        // });
+
+        // scanner.render(success,error);
+        //     function error(err)
+        //     {
+        //         console.log(err)
+        //     }    
+
+        //     function success(result)
+        //     {
+        //         console.log(result);
+        //         scanner.clear();
+        //     }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            const qrReaderDiv = document.getElementById('qr-reader');
+            const scanResult = document.getElementById('scan-result');
+            const resultMessage = document.getElementById('result-message');
+            const resultDetails = document.getElementById('result-details');
+            const scanAgainBtn = document.getElementById('scan-again');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            
+            let html5QrcodeScanner;
+            
+            // Show loading spinner
+            loadingSpinner.style.display = 'flex';
+            
+            try {
+                // 1. Check browser support
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw new Error("Camera is not supported in your browser");
+                }
+                
+                // 2. Check camera permissions
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: {
+                            facingMode: "environment",
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        } 
+                    });
+                    stream.getTracks().forEach(track => track.stop());
+                } catch (err) {
+                    throw new Error("Please allow camera access to scan QR codes");
+                }
+                
+                // 3. Initialize scanner
+                html5QrcodeScanner = new Html5Qrcode("qr-reader");
+                
+                const config = { 
+                    fps: 10,
+                    qrbox: { width: 200, height: 200 },
+                    supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
+                };
+                
+                // Hide spinner when starting scanner
+                loadingSpinner.style.display = 'none';
+                
+                await html5QrcodeScanner.start(
+                    { facingMode: "environment" },
+                    config,
+                    onScanSuccess,
+                    onScanError
+                );
+                
+            } catch (error) {
+                console.error("Scanner error:", error);
+                loadingSpinner.style.display = 'none';
+                showError(error.message);
+            }
+            
+            // Handle successful scan
+            async function onScanSuccess(decodedText) {
+                try {
+                    await html5QrcodeScanner.stop();
+                    
+                    // Show scanning status
+                    resultMessage.textContent = "Verifying ticket...";
+                    resultDetails.textContent = "";
+                    scanResult.className = "";
+                    scanResult.style.display = "block";
+                    
+                    const result = await verifyQRCode(decodedText);
+                    
+                    if (result.valid) {
+                        showResult(
+                            "Valid Ticket ✅", 
+                            `Ticket ID: ${result.ticketId}<br>Event: ${result.eventName}<br>Attendee: ${result.attendeeName}`,
+                            true
+                        );
+                    } else {
+                        showResult(
+                            "Invalid Ticket ❌", 
+                            result.message || "This QR code is not valid for any event",
+                            false
+                        );
+                    }
+                } catch (error) {
+                    console.error("Error handling scan:", error);
+                    showResult(
+                        "Verification Error", 
+                        "Could not verify the ticket. Please try again.",
+                        false
+                    );
+                }
+            }
+            
+            // Handle scan error
+            function onScanError(errorMessage) {
+                // Ignore some errors
+                if (!errorMessage.includes("NotFoundException")) {
+                    console.log("Scan error:", errorMessage);
+                }
+            }
+            
+        // Verify QR code with backend
+        async function verifyQRCode(qrContent) {
+                const response = await fetch(`/Organiser/ScanTicket/?data=${qrContent}`, {
+                    method: 'GET'
+                });
+                var res = await response.json()
+                console.log(res);
+                return res; // Assuming backend returns { valid, ticketId, eventName, attendeeName }
+        }
+
+            
+            
+            // Display scan result
+            function showResult(message, details, isSuccess) {
+                resultMessage.innerHTML = message;
+                resultDetails.innerHTML = details;
+                scanResult.className = isSuccess ? "result-success" : "result-error";
+                scanResult.style.display = "block";
+            }
+            
+            // Display error message
+            function showError(message) {
+                qrReaderDiv.innerHTML = `
+                    <div class="alert alert-danger text-center">
+                        <i class="fas fa-exclamation-triangle me-2"></i> 
+                        ${message}
+                        <div class="mt-3 d-flex justify-content-center">
+                            <button onclick="window.location.reload()" class="btn btn-sm btn-warning me-2">
+                                <i class="fas fa-sync-alt me-2"></i> Reload
+                            </button>
+                            <a href="organizerDashboard.html" class="btn btn-sm btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i> Dashboard
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Scan again button
+            scanAgainBtn.addEventListener('click', async function() {
+                scanResult.style.display = "none";
+                try {
+                    loadingSpinner.style.display = 'flex';
+                    await html5QrcodeScanner.start(
+                        { facingMode: "environment" },
+                        { fps: 10, qrbox: { width: 200, height: 200 } },
+                        onScanSuccess,
+                        onScanError
+                    );
+                    loadingSpinner.style.display = 'none';
+                } catch (error) {
+                    loadingSpinner.style.display = 'none';
+                    showError(error.message);
+                }
+            });
+            
+            // Clean up when leaving page
+            window.addEventListener('beforeunload', () => {
+                if (html5QrcodeScanner) {
+                    html5QrcodeScanner.stop().catch(console.error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

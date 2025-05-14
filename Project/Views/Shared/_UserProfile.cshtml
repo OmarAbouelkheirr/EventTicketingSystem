@@ -1,0 +1,34 @@
+﻿@using EventBookingSystem.Data
+@using MVC.DTOs
+@using System.IdentityModel.Tokens.Jwt
+@using System.Security.Claims
+<style>
+    .navbar .nav-item img {
+        object-fit: cover;
+        border: 2px solid #dee2e6;
+    }
+    .navbar span{
+         color: #ffffff;
+    }
+</style>
+@{
+    string jwt = Context.Request.Cookies["jwt"];
+    string fullName = "";
+    string profileImage = "";
+
+   if (!string.IsNullOrEmpty(jwt))
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var token = handler.ReadJwtToken(jwt);
+
+        profileImage = token.Claims.FirstOrDefault(c => c.Type == "Image" )?.Value;
+        fullName = token.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value;
+        <div>
+        
+                <img src="/profile-images/@(profileImage)" alt="Profile" class="rounded-circle me-2" width="32" height="32">
+                <span>@fullName</span>
+        </div>
+    }
+
+
+}
