@@ -1,7 +1,7 @@
 # 🎫 EventHub
 
-[![Live Website](https://img.shields.io/badge/Live-Website-success?style=for-the-badge&logo=vercel)](https://lnkd.in/gJcfbVCj)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github)](https://lnkd.in/gsd5Vi7j)
+[![Live Website](https://img.shields.io/badge/Live-Website-success?style=for-the-badge&logo=vercel)](http://onlineticketing.runasp.net/)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github)](https://github.com/OmarAbouelkheirr/EventTicketingSystem)
 
 > **A graduation project for the Digital Egypt Pioneers Initiative (DEPI) – .NET Backend Track.** 
 > 
@@ -57,10 +57,6 @@ Developed by an amazing team over a 6-month learning journey:
 - **Fedaa** – Developed the frontend for the admin dashboard, allowing admins to control and manage all platform aspects.
 - **Farah Elshaer** – Designed and implemented the attendee user interface and user dashboard.
 - **Mohumed Hesham Taha** – Connected the frontend with the backend using the MVC pattern and ensured smooth integration across components.
-
-## 🙏 Acknowledgments
-
-💡 **Special thanks to our mentor Eng. Amira Hashem** for her continuous support and valuable guidance throughout this project.
 
 ## 🛠️ Setup & Installation
 
