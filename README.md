@@ -1,8 +1,13 @@
 # 🎫 EventHub
 
+[![Live Website](https://img.shields.io/badge/Live-Website-success?style=for-the-badge&logo=vercel)](https://lnkd.in/gJcfbVCj)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github)](https://lnkd.in/gsd5Vi7j)
+
+> **A graduation project for the Digital Egypt Pioneers Initiative (DEPI) – .NET Backend Track.** 
+> 
 > A comprehensive web platform that helps students and individuals discover and book events in fields they’re passionate about.
 
-We noticed that many students struggle to find relevant events in their areas of interest. We built **EventHub** to bridge this gap by making it easy to browse, book, and attend events — all in one centralized place.
+We noticed that many students struggle to find relevant events in their areas of interest. We built **EventHub** to bridge this gap by making it easy to browse, book, and attend events — all in one centralized place. 
 
 ---
 
@@ -42,19 +47,22 @@ The system is modularized into several key components:
 - LINQ
 - JWT (JSON Web Tokens) for Authentication
 
-## 👥 Team
+## 👥 Meet the Team
 
-*Add your team members here:*
+Developed by an amazing team over a 6-month learning journey:
 
-- **[Team Member 1 Name]** - *[Role/Title]* - [Link to GitHub/LinkedIn]
-- **[Team Member 2 Name]** - *[Role/Title]* - [Link to GitHub/LinkedIn]
-- **[Team Member 3 Name]** - *[Role/Title]* - [Link to GitHub/LinkedIn]
-- **[Team Member 4 Name]** - *[Role/Title]* - [Link to GitHub/LinkedIn]
-- **[Team Member 5 Name]** - *[Role/Title]* - [Link to GitHub/LinkedIn]
+- **Omar Abouelkhier** *(Team Lead)* – Led system analysis and architecture design, created the full backend and API layer for users, organizers, and admins, designed the database structure, divided tasks, and coordinated the overall development process.
+- **Ossama Eliraqy** – Developed the authentication and role-based authorization system, and integrated it with the backend APIs.
+- **Hanin Ashraf** – Built the frontend for the organizer dashboard to manage events, and contributed to the landing page design.
+- **Fedaa** – Developed the frontend for the admin dashboard, allowing admins to control and manage all platform aspects.
+- **Farah Elshaer** – Designed and implemented the attendee user interface and user dashboard.
+- **Mohumed Hesham Taha** – Connected the frontend with the backend using the MVC pattern and ensured smooth integration across components.
+
+## 🙏 Acknowledgments
+
+💡 **Special thanks to our mentor Eng. Amira Hashem** for her continuous support and valuable guidance throughout this project.
 
 ## 🛠️ Setup & Installation
-
-*(Instructions on how to run the project locally will go here)*
 
 1. Clone the repository.
 2. Open the Backend `.sln` file in Visual Studio.
@@ -64,4 +72,4 @@ The system is modularized into several key components:
 6. Serve the Frontend applications using Live Server or any static file server.
 
 ---
-*Built with ❤️ by the EventHub Team*
+*Built with ❤️ by the EventHub Team for DEPI*
